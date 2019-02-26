@@ -7,7 +7,6 @@
 
 
 #include "Residential.h"
-
 class House : public Residential {
 private:
     bool garden;
@@ -17,6 +16,8 @@ public:
 
     House(double price, const std::string &address, double area, Seller *sellerRef, int nbRooms, bool garage,
           bool garden, bool swimmingPool);
+
+    virtual void show() const;
 };
 
 

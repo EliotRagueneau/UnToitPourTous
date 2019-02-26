@@ -16,11 +16,6 @@
 
 class Agency {
 private:
-//    std::list<House> houses;
-//    std::list<Flat> flats;
-//    std::list<Ground> grounds;
-//    std::list<Professional> professionals;
-
     std::list<std::shared_ptr<Good>> goods;
     std::map<std::string, Seller *> sellers;
     std::map<std::string, Buyer *> buyers;
@@ -29,6 +24,8 @@ public:
     Seller *getSellerRef();
 
     void addGood();
+
+    void show() const;
 
     void addBuyer();
 

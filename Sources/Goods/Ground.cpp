@@ -16,3 +16,10 @@ Ground::Ground(Seller *sellerRef) : Good(sellerRef) {
     cout << "Peut-on construire sur le terrain ?\n";
     buildable = Utils::yesOrNo();
 }
+
+void Ground::show() const {
+    Good::show();
+    if (buildable) {
+        cout << "\t-On peut construire sur ce terrain\n";
+    }
+}

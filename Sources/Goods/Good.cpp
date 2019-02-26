@@ -3,7 +3,9 @@
 //
 
 #include <iostream>
+#include <limits>
 #include "../../Headers/Goods/Good.h"
+#include "../../Headers/Clients/Seller.h"
 
 using namespace std;
 
@@ -17,12 +19,12 @@ Good::Good(const Good &src) : price(src.price),
 
 Good::Good(Seller *sellerRef) : sellerRef(sellerRef) {
     cout << "Quelle est l'adresse du bien ?\n";
-    cin >> address;
+    getline(cin, address);
     cout << "Quelle est le prix du bien ?\n";
     cin >> price;
     cout << "Quelle est la surface du bien ?\n";
     cin >> area;
-    cout << "Quelle est l'adresse du bien ?\n";
+    cin.ignore();
     id = ++nbInstance;
 }
 
@@ -33,6 +35,14 @@ Good::Good(double price, const string &address, double area, Seller *sellerRef) 
 
 Seller *Good::getSellerRef() const {
     return sellerRef;
+}
+
+void Good::show() const {
+    cout <<
+    "\t-Prix : " << price << "€\n" <<
+    "\t-Surface : " << area << "m²\n" <<
+    "\t-Adresse : " << address << "\n" <<
+    "\t-Nom du vendeur : " << sellerRef->getName() << "\n";
 }
 
 

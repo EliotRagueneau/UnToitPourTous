@@ -8,9 +8,10 @@
 using namespace std;
 
 bool Utils::yesOrNo() {
-    cout << "\t[O]ui\n\t[N]on\n";
+    cout << "\t-[O]ui\n\t-[N]on\n";
     string userInput;
     cin >> userInput;
+    cin.ignore();
     if (userInput == "O" || userInput == "o" || userInput == "Oui" || userInput == "oui") {
         return true;
     } else if (userInput == "N" || userInput == "n" || userInput == "Non" || userInput == "n") {
@@ -19,4 +20,5 @@ bool Utils::yesOrNo() {
         cout << "Entrée non valide\n";
         return yesOrNo();
     }
+
 }

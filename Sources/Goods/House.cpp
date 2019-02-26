@@ -18,3 +18,13 @@ House::House(Seller *sellerRef) : Residential(sellerRef) {
     cout << "La maison possède t'elle une piscine ?\n";
     swimmingPool = Utils::yesOrNo();
 }
+
+void House::show() const {
+    Residential::show();
+    if (garden) {
+        cout << "\t-L'appartement possède un balcon\n";
+    }
+    if (swimmingPool) {
+        cout << "\t-L'appartement possède une cave\n";
+    }
+}

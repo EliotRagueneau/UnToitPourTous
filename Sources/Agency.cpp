@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <limits>
 #include "../Headers/Agency.h"
 #include "../Headers/Goods/House.h"
 #include "../Headers/Goods/Flat.h"
@@ -24,49 +25,51 @@ void Agency::addGood() {
 
     int goodKind;
     cin >> goodKind;
-//    shared_ptr<Good> toAdd;
+    cin.ignore();
+    shared_ptr<Good> toAdd;
 
     switch (goodKind) {
-        case 1: {
-            //            toAdd = new House(sellerRef);
-            shared_ptr<House> house(new House(sellerRef));
-            goods.push_back(house);
-            sellers[sellerName]->addGood(house);
+        case 1:
+            toAdd = shared_ptr<Good>(new House(sellerRef));
             break;
-        }
+        case 2:
+            toAdd = shared_ptr<Good>(new Flat(sellerRef));
+            break;
+        case 3:
+            toAdd = shared_ptr<Good>(new Ground(sellerRef));
+            break;
+        case 4:
+            toAdd = shared_ptr<Good>(new Professional(sellerRef));
+            break;
 
-        case 2: {
-            shared_ptr<Flat> flat(new Flat(sellerRef));
-            goods.push_back(flat);
-            sellers[sellerName]->addGood(flat);
-            break;
-        }
-        case 3: {
-            break;
-        }
         default:
             cout << "Mauvaise entrée\n";
             addGood();
             break;
-
     }
-
-
+    goods.push_back(toAdd);
+    sellers[sellerName]->addGood(toAdd);
 }
 
 Seller *Agency::getSellerRef() {
     cout << "Quel est le nom du vendeur ?\n";
 
     string sellerName;
-    cin >> sellerName;
+    getline(cin, sellerName);
 
     if (sellers.count(sellerName) == 0) {
         cout << "Quel est l'adresse du vendeur ?\n";
         string sellerAdress;
-        cin >> sellerAdress;
+        getline(cin, sellerAdress);
         sellers[sellerName] = new Seller(sellerName, sellerAdress);
     }
     return &(*sellers.find(sellerName)->second);
+}
+
+void Agency::show() const {
+    for (const auto &good : goods) {
+        good->show();
+    }
 }
 
 void Agency::addBuyer() {

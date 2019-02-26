@@ -3,11 +3,16 @@
 //
 
 #include <memory>
-#include "Headers/Goods/Good.h"
+#include "Headers/Agency.h"
 
 using namespace std;
 
 int main() {
     Agency unToitPourTous;
 
+    unToitPourTous.addGood();
+    unToitPourTous.addGood();
+    unToitPourTous.addGood();
+
+    unToitPourTous.show();
 }

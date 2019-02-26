@@ -17,6 +17,8 @@ public:
     Residential(double price, const std::string &address, double area, Seller *sellerRef, int nbRooms, bool garage);
 
     explicit Residential(Seller *sellerRef);
+
+    virtual void show() const;
 };
 
 

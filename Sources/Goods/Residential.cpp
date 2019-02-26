@@ -13,8 +13,16 @@ Residential::Residential(double price, const string &address, double area, Selle
         : Good(price, address, area, sellerRef), nbRooms(nbRooms), garage(garage) {}
 
 Residential::Residential(Seller *sellerRef) : Good(sellerRef) {
-    cout << "Combien y a t'il de pièces dan sla résidence ?\n";
+    cout << "Combien y a t'il de pièces dans la résidence ?\n";
     cin >> nbRooms;
     cout << "Il y a t'il un garage dans la résidence ?\n";
     garage = Utils::yesOrNo();
+}
+
+void Residential::show() const {
+    Good::show();
+    cout << "\t-Nombre de pièces : " << nbRooms << "\n";
+    if (garage) {
+        cout << "\t-La résidence possède un garage.\n";
+    }
 }

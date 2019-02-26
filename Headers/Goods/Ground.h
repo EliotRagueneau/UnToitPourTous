@@ -16,6 +16,7 @@ public:
 
     Ground(double price, const std::string &address, double area, Seller *sellerRef, bool buildable);
 
+    virtual void show() const;
 
 };
 

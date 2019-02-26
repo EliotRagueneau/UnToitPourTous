@@ -22,4 +22,18 @@ Flat::Flat(Seller *sellerRef) : Residential(sellerRef) {
     cave = Utils::yesOrNo();
     cout << "Combien y a t'il d'appartements dans l'immeuble ?\n";
     cin >> nbBuildingFlats;
+    cin.ignore();
+}
+
+void Flat::show() const {
+    Residential::show();
+    cout <<
+         "\t-Étage : " << floor << "\n" <<
+         "\t-Nombre d'appartements dans l'immeuble : " << nbBuildingFlats << "\n";
+    if (balcony) {
+        cout << "\t-L'appartement possède un balcon\n";
+    }
+    if (cave) {
+        cout << "\t-L'appartement possède une cave\n";
+    }
 }

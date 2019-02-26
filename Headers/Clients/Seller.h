@@ -7,12 +7,15 @@
 
 
 #include "Client.h"
-#include "../Goods/Good.h"
+//#include "../Goods/Good.h"
 #include <list>
+#include <memory>
+
+class Good;
 
 class Seller : public Client {
 private:
-    std::list<std::shared_ptr<Good>> sellingGoodsList;
+    std::list<std::shared_ptr<Good> > sellingGoodsList;
 
 public:
     void addGood(std::shared_ptr<Good> good);

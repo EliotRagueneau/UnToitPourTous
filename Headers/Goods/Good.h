@@ -10,7 +10,6 @@
 #include <map>
 #include "../Clients/Seller.h"
 #include "../Clients/Buyer.h"
-#include "../Agency.h"
 
 class Good {
 private:
@@ -33,8 +32,7 @@ public:
 
     Good(const Good& src);
 
-
-
+    virtual void show() const;
 };
 
 

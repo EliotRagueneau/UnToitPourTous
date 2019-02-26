@@ -18,6 +18,8 @@ public:
                  bool storeRoom);
 
     explicit Professional(Seller *sellerRef);
+
+    virtual void show() const;
 };
 
 

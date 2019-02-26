@@ -7,7 +7,9 @@
 
 
 #include "Client.h"
-#include "../Goods/Good.h"
+#include <list>
+//#include "../Goods/Good.h"
+class Good;
 
 class Buyer : public Client {
 private:
