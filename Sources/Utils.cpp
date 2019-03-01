@@ -12,9 +12,9 @@ bool Utils::yesOrNo() {
     string userInput;
     cin >> userInput;
     cin.ignore();
-    if (userInput == "O" || userInput == "o" || userInput == "Oui" || userInput == "oui") {
+    if (userInput == "O" || userInput == "o" || userInput == "Oui" || userInput == "oui" || userInput == "OUI") {
         return true;
-    } else if (userInput == "N" || userInput == "n" || userInput == "Non" || userInput == "n") {
+    } else if (userInput == "N" || userInput == "n" || userInput == "Non" || userInput == "n" || userInput == "NON") {
         return false;
     } else {
         cout << "Entrée non valide\n";

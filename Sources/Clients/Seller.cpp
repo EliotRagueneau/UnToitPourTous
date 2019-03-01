@@ -10,6 +10,6 @@ Seller::Seller() : Client() {}
 
 Seller::Seller(const std::string &name, const std::string &address) : Client(name, address) {}
 
-void Seller::addGood(shared_ptr<Good> good) {
+void Seller::addGood(const shared_ptr<Good> &good) {
     sellingGoodsList.push_back(good);
 }

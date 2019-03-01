@@ -20,9 +20,9 @@ Good::Good(const Good &src) : price(src.price),
 Good::Good(Seller *sellerRef) : sellerRef(sellerRef) {
     cout << "Quelle est l'adresse du bien ?\n";
     getline(cin, address);
-    cout << "Quelle est le prix du bien ?\n";
+    cout << "Quelle est le prix du bien (€)?\n";
     cin >> price;
-    cout << "Quelle est la surface du bien ?\n";
+    cout << "Quelle est la surface du bien (m²)?\n";
     cin >> area;
     cin.ignore();
     id = ++nbInstance;
@@ -38,6 +38,7 @@ Seller *Good::getSellerRef() const {
 }
 
 void Good::show() const {
+    cout << "Bien n°" << id << endl;
     cout <<
     "\t-Prix : " << price << "€\n" <<
     "\t-Surface : " << area << "m²\n" <<

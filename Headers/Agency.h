@@ -13,12 +13,14 @@
 #include "Goods/Flat.h"
 #include "Goods/Ground.h"
 #include "Goods/Professional.h"
+#include "Clients/Seller.h"
+#include "Clients/Buyer.h"
 
 class Agency {
 private:
     std::list<std::shared_ptr<Good>> goods;
-    std::map<std::string, Seller *> sellers;
-    std::map<std::string, Buyer *> buyers;
+    std::map<std::string, std::shared_ptr<Seller>> sellers;
+    std::map<std::string, std::shared_ptr<Buyer>> buyers;
 public:
 
     Seller *getSellerRef();

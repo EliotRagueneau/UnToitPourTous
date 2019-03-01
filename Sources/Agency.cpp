@@ -1,3 +1,5 @@
+#include <memory>
+
 //
 // Created by eliot on 25/02/19.
 //
@@ -13,6 +15,7 @@
 using namespace std;
 
 void Agency::addGood() {
+    cout << "Vous allez rajouter un nouveau bien.\n";
     Seller *sellerRef = getSellerRef();
     string sellerName = ((Client *) sellerRef)->getName();
 
@@ -49,6 +52,8 @@ void Agency::addGood() {
     }
     goods.push_back(toAdd);
     sellers[sellerName]->addGood(toAdd);
+    toAdd->show();
+    cout << "Bien ajouté\n\n";
 }
 
 Seller *Agency::getSellerRef() {
@@ -61,7 +66,7 @@ Seller *Agency::getSellerRef() {
         cout << "Quel est l'adresse du vendeur ?\n";
         string sellerAdress;
         getline(cin, sellerAdress);
-        sellers[sellerName] = new Seller(sellerName, sellerAdress);
+        sellers[sellerName] = make_shared<Seller>(sellerName, sellerAdress);
     }
     return &(*sellers.find(sellerName)->second);
 }
@@ -69,6 +74,7 @@ Seller *Agency::getSellerRef() {
 void Agency::show() const {
     for (const auto &good : goods) {
         good->show();
+        cout << "======================\n";
     }
 }
 

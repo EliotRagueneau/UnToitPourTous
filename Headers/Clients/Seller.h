@@ -7,7 +7,6 @@
 
 
 #include "Client.h"
-//#include "../Goods/Good.h"
 #include <list>
 #include <memory>
 
@@ -18,7 +17,7 @@ private:
     std::list<std::shared_ptr<Good> > sellingGoodsList;
 
 public:
-    void addGood(std::shared_ptr<Good> good);
+    void addGood(const std::shared_ptr<Good>& good);
 
     Seller(const std::string &name, const std::string &address);
 
