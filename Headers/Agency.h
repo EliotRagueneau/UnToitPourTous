@@ -41,6 +41,13 @@ public:
 
     void load();
 
+    void addProposal();
+
+    Buyer *findBuyer();
+
+    Seller *findSeller();
+
+    Good *findGood();
 };
 
 

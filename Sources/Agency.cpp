@@ -101,3 +101,57 @@ void Agency::save() {
 void Agency::load() {
 
 }
+
+Buyer *findBuyer(){
+// Vérification si l'acheteur existe, récupération de l adresse de l'objet ou proposition de création de l'objet buyer
+    cout << "Quelle est le nom de l'acheteur\n?";
+    string nomAcheteur;
+    getline(cin, nomAcheteur); // vérifier que ca autorise les espaces si on décide d entré nom prénom 
+    map<string, shared_ptr<Buyer>>::iterator trouve = buyers.find(nomAcheteur);
+
+    if(trouve == buyers.end())
+    {
+        cout << "L'acheteur n'est pas enregistré dans l'agence\n";
+        cout << "Voulez-vous ajouter cette acheteur?\n";
+        cout << "O pour oui et N pour non\n"; // ajouter la possiblilité de cree l acheteur à la volé
+        string rep;
+        getline(cin,rep);
+        if (rep == "o" || rep == "O"){
+            Buyer::Buyer();
+        }
+        else {
+            return NULL;
+        }
+    }
+    else{
+        return trouve->second; //peut etre probleme de type de pointeur
+    }
+}
+
+Seller *findSeller(){
+    // Vérification si le vendeur existe, récupération de l adresse de l'objet ou proposition de création de l'objet seller
+    cout << "Quelle est le nom de l'acheteur\n?";
+    string nomVendeur;
+    map<string, shared_ptr<Seller>>::iterator trouve = sellers.find(nomVendeur);
+
+    if(trouve == sellers.end()){
+        cout << "Le vendeur n'est pas enregistré dans l'agence\n";
+        return NULL;
+    }
+    else{
+        return trouve->second; //peut etre probleme de type de pointeur
+    }
+
+}
+
+Good *findGood(){
+
+}
+
+void Aggency::addProposal(){
+
+    cout << "Quel est le prix proposé?\n";
+    double prix;
+    getline(cin, prix);
+}
+

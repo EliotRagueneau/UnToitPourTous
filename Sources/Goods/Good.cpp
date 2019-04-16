@@ -37,6 +37,10 @@ Seller *Good::getSellerRef() const {
     return sellerRef;
 }
 
+string getAddress() const {
+    return address;
+}
+
 void Good::show() const {
     cout << "Bien n°" << id << endl;
     cout <<
