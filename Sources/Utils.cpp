@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "../Headers/Utils.h"
+#include <string>
 
 using namespace std;
 

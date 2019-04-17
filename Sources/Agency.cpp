@@ -197,7 +197,7 @@ shared_ptr<Buyer> Agency::findBuyer(){
         cout << "Voulez-vous ajouter cette acheteur?\n";
 		bool rep = Utils::yesOrNo();
         if (rep == true){
-			shared_ptr<Buyer> ptrNewBuyer(0);
+			shared_ptr<Buyer> ptrNewBuyer;
 			ptrNewBuyer = shared_ptr<Buyer>(new Buyer());
 			buyers[ptrNewBuyer->getName()] = ptrNewBuyer;
         }
@@ -212,7 +212,7 @@ shared_ptr<Buyer> Agency::findBuyer(){
 
 shared_ptr<Seller> Agency::findSeller(){
     // Vérification si le vendeur existe, récupération de l adresse de l'objet ou proposition de création de l'objet seller
-    cout << "Quelle est le nom de l'acheteur\n?";
+    cout << "Quelle est le nom de l'acheteur?\n";
     string nomVendeur;
     map<string, shared_ptr<Seller>>::iterator trouve = sellers.find(nomVendeur);
 
@@ -227,7 +227,7 @@ shared_ptr<Seller> Agency::findSeller(){
 }
 
 shared_ptr<Good> Agency::findGood(){ //recherche d'un bien via son adresse
-	cout << "Quelle est l'adresse du bien?";
+	cout << "Quelle est l'adresse du bien?\n";
 	string adresse;
 	getline(cin, adresse);
 	list<shared_ptr<Good>>::iterator itGood = goods.begin();

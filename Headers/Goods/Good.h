@@ -21,7 +21,7 @@ protected:
     Seller& sellerRef;
     int id;
     bool sold = false;
-    std::map<shared_ptr<Buyer>, double> proposalsMap;
+    std::map<std::shared_ptr<Buyer>, double> proposalsMap;
 
 public:
     Seller &getSeller() const;
