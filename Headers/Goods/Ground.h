@@ -12,11 +12,13 @@ class Ground : public Good {
 private:
     bool buildable;
 public:
-    explicit Ground(Seller *sellerRef);
+    explicit Ground(Seller &sellerRef);
 
-    Ground(double price, const std::string &address, double area, Seller *sellerRef, bool buildable);
+    Ground(double price, const std::string &address, double area, Seller &sellerRef, bool buildable);
 
     virtual void show() const;
+
+    virtual void save(std::ofstream &file) const;
 
 };
 

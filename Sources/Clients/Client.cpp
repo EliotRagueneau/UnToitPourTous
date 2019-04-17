@@ -3,6 +3,8 @@
 //
 
 #include <iostream>
+#include <Clients/Client.h>
+
 #include "../../Headers/Clients/Client.h"
 using namespace std;
 
@@ -17,4 +19,9 @@ Client::Client() {
 
 string &Client::getName() {
     return name;
+}
+
+void Client::save(std::ofstream &file) const {
+    file << name << endl;
+    file << address << endl;
 }

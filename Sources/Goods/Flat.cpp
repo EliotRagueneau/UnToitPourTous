@@ -3,17 +3,19 @@
 //
 
 #include <iostream>
+#include <Goods/Flat.h>
+
 #include "../../Headers/Goods/Flat.h"
 #include "../../Headers/Utils.h"
 
 using namespace std;
 
-Flat::Flat(double price, const string &address, double area, Seller *sellerRef, int nbRooms, bool garage, int floor,
+Flat::Flat(double price, const string &address, double area, Seller &sellerRef, int nbRooms, bool garage, int floor,
            bool cave, bool balcony, int nbBuildingFlats) : Residential(price, address, area, sellerRef, nbRooms,
                                                                        garage), floor(floor), cave(cave),
                                                            balcony(balcony), nbBuildingFlats(nbBuildingFlats) {}
 
-Flat::Flat(Seller *sellerRef) : Residential(sellerRef) {
+Flat::Flat(Seller &sellerRef) : Residential(sellerRef) {
     cout << "A quel étage se trouve l'appartement ?\n";
     cin >> floor;
     cout << "L'apparatement possède t'il un balcon ?\n";
@@ -36,4 +38,11 @@ void Flat::show() const {
     if (cave) {
         cout << "\t-L'appartement possède une cave\n";
     }
+}
+
+void Flat::save(std::ofstream &file) const {
+    file << "Appartement\n";
+    Residential::save(file);
+    file << balcony << endl;
+    file << cave << endl;
 }

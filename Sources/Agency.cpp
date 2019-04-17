@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <limits>
+#include <fstream>
 #include "../Headers/Agency.h"
 #include "../Headers/Goods/House.h"
 #include "../Headers/Goods/Flat.h"
@@ -16,8 +17,8 @@ using namespace std;
 
 void Agency::addGood() {
     cout << "Vous allez rajouter un nouveau bien.\n";
-    Seller *sellerRef = getSellerRef();
-    string sellerName = ((Client *) sellerRef)->getName();
+    Seller sellerRef = getSellerRef();
+    string sellerName = sellerRef.getName();
 
     cout << "Quel type de bien souhaitez vous rajouter ?\n";
     cout << "\t-1. Une maison\n";
@@ -56,7 +57,7 @@ void Agency::addGood() {
     cout << "Bien ajouté\n\n";
 }
 
-Seller *Agency::getSellerRef() {
+Seller &Agency::getSellerRef() {
     cout << "Quel est le nom du vendeur ?\n";
 
     string sellerName;
@@ -64,11 +65,11 @@ Seller *Agency::getSellerRef() {
 
     if (sellers.count(sellerName) == 0) {
         cout << "Quel est l'adresse du vendeur ?\n";
-        string sellerAdress;
-        getline(cin, sellerAdress);
-        sellers[sellerName] = make_shared<Seller>(sellerName, sellerAdress);
+        string sellerAddress;
+        getline(cin, sellerAddress);
+        sellers[sellerName] = make_shared<Seller>(sellerName, sellerAddress);
     }
-    return &(*sellers.find(sellerName)->second);
+    return *sellers.find(sellerName)->second;
 }
 
 void Agency::show() const {
@@ -95,9 +96,85 @@ void Agency::visit() {
 }
 
 void Agency::save() {
+    ofstream goodsFile;
+    goodsFile.open("../Data/biens.txt");
+    if (goodsFile.is_open()) {
+        for (const auto &good : goods) {
+            good->save(goodsFile);
+            goodsFile << endl;
+        }
+        goodsFile.close();
+    }
+
+
+    ofstream sellersFile;
+    sellersFile.open("../Data/vendeurs.txt");
+    if (sellersFile.is_open()) {
+        for (const auto &seller : sellers) {
+            seller.second->save(sellersFile);
+            sellersFile << endl;
+        }
+        sellersFile.close();
+    }
+
+    ofstream buyersFile;
+    buyersFile.open("../Data/acheteurs.txt");
+    if (buyersFile.is_open()) {
+        for (const auto &buyer : buyers) {
+            buyer.second->save(sellersFile);
+            buyersFile << endl;
+        }
+        buyersFile.close();
+    }
 
 }
 
 void Agency::load() {
+    string sellerName;
+    string sellerAddress;
+    ifstream sellerFile("../Data/vendeurs.txt");
+    if (sellerFile.is_open()) {
+        while (getline(sellerFile, sellerName)) {
+            getline(sellerFile, sellerAddress);
+            sellers[sellerName] = make_shared<Seller>(sellerName, sellerAddress);
+            sellerFile.ignore();
+        }
+        sellerFile.close();
+    }
+
+    string goodType;
+    double goodPrice;
+    double goodArea;
+    string goodAddress;
+    string goodSellerName;
+
+    int resiNbRooms;
+    bool resiGarage;
+
+
+    ifstream goodsFile;
+    goodsFile.open("../Data/biens.txt");
+    if (goodsFile.is_open()) {
+        while (getline(goodsFile, goodType)) {
+            goodsFile >> goodPrice;
+            goodsFile >> goodArea;
+            goodsFile.ignore();
+            getline(goodsFile, goodAddress);
+            getline(goodsFile, goodSellerName);
+
+            if (goodType == "Maison") {
+
+
+            } else if (goodType == "Appartement") {
+
+            } else if (goodType == "Terrain") {
+
+            } else if (goodType == "Local") {
+
+            }
+
+        }
+        goodsFile.close();
+    }
 
 }

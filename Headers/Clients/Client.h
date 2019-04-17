@@ -7,6 +7,7 @@
 
 
 #include <string>
+#include <fstream>
 
 class Client {
 protected:
@@ -18,6 +19,8 @@ public:
     std::string &getName();
 
     Client();
+
+    void save(std::ofstream& file) const;
 
 };
 

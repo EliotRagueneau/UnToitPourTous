@@ -18,21 +18,23 @@ protected:
     double price;
     std::string address;
     double area;
-    Seller *sellerRef;
+    Seller& sellerRef;
     int id;
     bool sold = false;
     std::map<Buyer, double> proposalsMap;
 
 public:
-    Seller *getSellerRef() const;
+    Seller &getSeller() const;
 
-    Good(double price, const std::string &address, double area, Seller *sellerRef);
+    Good(double price, const std::string &address, double area, Seller &sellerRef);
 
-    explicit Good(Seller * sellerRef);
+    explicit Good(Seller & sellerRef);
 
     Good(const Good& src);
 
     virtual void show() const;
+
+    virtual void save(std::ofstream &file) const;
 };
 
 

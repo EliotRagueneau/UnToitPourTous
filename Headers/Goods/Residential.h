@@ -7,6 +7,8 @@
 
 
 #include "Good.h"
+#include <fstream>
+
 
 class Residential : public Good {
 protected:
@@ -14,11 +16,13 @@ protected:
     bool garage;
 public:
 
-    Residential(double price, const std::string &address, double area, Seller *sellerRef, int nbRooms, bool garage);
+    Residential(double price, const std::string &address, double area, Seller &sellerRef, int nbRooms, bool garage);
 
-    explicit Residential(Seller *sellerRef);
+    explicit Residential(Seller &sellerRef);
 
     virtual void show() const;
+
+    virtual void save(std::ofstream &file) const;
 };
 
 

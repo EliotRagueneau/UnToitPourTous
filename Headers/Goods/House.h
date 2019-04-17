@@ -12,12 +12,13 @@ private:
     bool garden;
     bool swimmingPool;
 public:
-    explicit House(Seller *sellerRef);
+    explicit House(Seller &sellerRef);
 
-    House(double price, const std::string &address, double area, Seller *sellerRef, int nbRooms, bool garage,
+    House(double price, const std::string &address, double area, Seller &sellerRef, int nbRooms, bool garage,
           bool garden, bool swimmingPool);
 
     virtual void show() const;
+    virtual void save(std::ofstream & file) const;
 };
 
 

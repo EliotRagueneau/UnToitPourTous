@@ -15,12 +15,14 @@ private:
     bool balcony;
     int nbBuildingFlats;
 public:
-    explicit Flat(Seller *sellerRef);
+    explicit Flat(Seller &sellerRef);
 
-    Flat(double price, const std::string &address, double area, Seller *sellerRef, int nbRooms, bool garage, int floor,
+    Flat(double price, const std::string &address, double area, Seller &sellerRef, int nbRooms, bool garage, int floor,
          bool cave, bool balcony, int nbBuildingFlats);
 
     virtual void show() const;
+
+    virtual void save(std::ofstream& file) const;
 
 };
 

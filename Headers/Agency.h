@@ -23,7 +23,7 @@ private:
     std::map<std::string, std::shared_ptr<Buyer>> buyers;
 public:
 
-    Seller *getSellerRef();
+    Seller &getSellerRef();
 
     void addGood();
 

@@ -7,6 +7,8 @@
 
 
 #include "Good.h"
+#include <fstream>
+
 
 class Professional : public Good{
 private:
@@ -14,12 +16,14 @@ private:
     bool storeRoom;
 
 public:
-    Professional(double price, const std::string &address, double area, Seller *sellerRef, double showcaseSize,
+    Professional(double price, const std::string &address, double area, Seller &sellerRef, double showcaseSize,
                  bool storeRoom);
 
-    explicit Professional(Seller *sellerRef);
+    explicit Professional(Seller &sellerRef);
 
     virtual void show() const;
+
+    virtual void save(std::ofstream &file) const;
 };
 
 
