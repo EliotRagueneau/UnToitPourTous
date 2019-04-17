@@ -83,6 +83,13 @@ Good::~Good() {
     proposalsMap.clear();
 }
 
+void Good::showProposals()
+{
+	for (map<shared_ptr<Buyer>, double>::iterator it = proposalsMap.begin(); it != proposalsMap.end(); it++) {
+		cout << (it->first)->getName() << " Propose " << it->second << "€\n";
+	}
+}
+
 double Good::getPrice() const {
     return price;
 }

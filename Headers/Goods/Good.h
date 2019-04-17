@@ -47,6 +47,8 @@ public:
     virtual void simpleSave(std::ofstream &file) const;
 
     virtual ~Good();
+
+	void showProposals();
 };
 
 
