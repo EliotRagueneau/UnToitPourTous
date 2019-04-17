@@ -49,6 +49,8 @@ public:
     virtual ~Good();
 
 	void showProposals();
+
+	void printID() const;
 };
 
 

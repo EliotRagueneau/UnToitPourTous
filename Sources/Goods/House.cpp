@@ -25,6 +25,10 @@ House::House(shared_ptr<Seller> sellerRef) : Residential(sellerRef) {
 }
 
 void House::show() const {
+    Good::printID();
+
+    cout << "\t-Type : Maison\n";
+
     Residential::show();
     if (garden) {
         cout << "\t-L'appartement possède un balcon\n";

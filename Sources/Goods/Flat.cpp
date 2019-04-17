@@ -30,6 +30,8 @@ Flat::Flat(shared_ptr<Seller> sellerRef) : Residential(sellerRef) {
 }
 
 void Flat::show() const {
+    Good::printID();
+    cout << "\t-Type : Appartement\n";
     Residential::show();
     cout <<
          "\t-Étage : " << floor << "\n" <<

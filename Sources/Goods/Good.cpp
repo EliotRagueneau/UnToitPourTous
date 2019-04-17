@@ -50,7 +50,6 @@ string Good::getAddress() const {
 }
 
 void Good::show() const {
-    cout << "Bien n°" << id << endl;
     cout <<
          "\t-Prix : " << price << "€\n" <<
          "\t-Surface : " << area << "m²\n" <<
@@ -100,5 +99,9 @@ double Good::getArea() const {
 
 void Good::addProposal(const shared_ptr<Buyer> &ptrBuyer, double price) {
 	proposalsMap[ptrBuyer] = price;
+}
+
+void Good::printID() const {
+    cout << "Bien n°" << id << endl;
 }
 

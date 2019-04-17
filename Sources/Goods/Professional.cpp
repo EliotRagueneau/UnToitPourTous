@@ -24,6 +24,8 @@ Professional::Professional(shared_ptr<Seller> sellerRef) : Good(sellerRef) {
 }
 
 void Professional::show() const {
+    Good::printID();
+    cout << "\t-Type : Local\n";
     Good::show();
     cout << "\t-Surface de la vitrine : " << showcaseSize << "m²\n";
     if (storeRoom) {

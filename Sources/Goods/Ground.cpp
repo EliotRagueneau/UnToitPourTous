@@ -22,6 +22,8 @@ Ground::Ground(shared_ptr<Seller> sellerRef) : Good(sellerRef) {
 }
 
 void Ground::show() const {
+    Good::printID();
+    cout << "\t-Type : Terrain\n";
     Good::show();
     if (buildable) {
         cout << "\t-On peut construire sur ce terrain\n";
