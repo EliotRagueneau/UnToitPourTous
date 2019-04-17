@@ -372,6 +372,7 @@ void Agency::addProposal() {
 				cin.ignore();
 				ptrBien->addProposal(ptrAcheteur, prix);
 				cout << "Proposition enregistée\n"; // ajouter une methode show pour les propositions
+				ptrBien->showProposals();
             } else {
                 cout << "Vous n'avez pas sélectionné de bien\n";
                 break;
