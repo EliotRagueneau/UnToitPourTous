@@ -11,8 +11,9 @@
 using namespace std;
 
 
-Residential::Residential(double price, const string &address, double area, Seller &sellerRef, int nbRooms, bool garage)
-        : Good(price, address, area, sellerRef), nbRooms(nbRooms), garage(garage) {}
+Residential::Residential(double price, const string &address, double area, Seller &sellerRef, bool sold,
+                         int nbRooms, bool garage)
+        : Good(price, address, area, sellerRef, sold), nbRooms(nbRooms), garage(garage) {}
 
 Residential::Residential(Seller &sellerRef) : Good(sellerRef) {
     cout << "Combien y a t'il de pièces dans la résidence ?\n";

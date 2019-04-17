@@ -13,3 +13,7 @@ Seller::Seller(const std::string &name, const std::string &address) : Client(nam
 void Seller::addGood(const shared_ptr<Good> &good) {
     sellingGoodsList.push_back(good);
 }
+
+Seller::~Seller() {
+    sellingGoodsList.clear();
+}

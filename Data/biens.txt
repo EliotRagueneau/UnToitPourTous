@@ -1,0 +1,21 @@
+Appartement
+5000
+1
+3 rue de la Fleur, Paris
+
+0
+1
+0
+0
+0
+0
+200
+
+Terrain
+500
+50
+15 ue Beaufleury
+
+0
+1
+

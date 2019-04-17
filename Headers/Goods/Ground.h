@@ -14,7 +14,7 @@ private:
 public:
     explicit Ground(Seller &sellerRef);
 
-    Ground(double price, const std::string &address, double area, Seller &sellerRef, bool buildable);
+    Ground(double price, const std::string &address, double area, Seller &sellerRef, bool sold, bool buildable);
 
     virtual void show() const;
 

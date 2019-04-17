@@ -26,7 +26,8 @@ protected:
 public:
     Seller &getSeller() const;
 
-    Good(double price, const std::string &address, double area, Seller &sellerRef);
+    Good(double price, const std::string &address, double area, Seller &sellerRef, bool sold);
+
     std::string getAddress() const;
 
     explicit Good(Seller & sellerRef);
@@ -35,10 +36,17 @@ public:
 
     virtual void show() const;
 
-
 	void addProposal(const std::shared_ptr<Buyer> &ptrBuyer, double price);
 
+    double getPrice() const;
+
+    double getArea() const;
+
     virtual void save(std::ofstream &file) const;
+
+    virtual void simpleSave(std::ofstream &file) const;
+
+    virtual ~Good();
 };
 
 

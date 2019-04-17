@@ -5,6 +5,7 @@
 //
 
 #include <iostream>
+#include <memory>
 #include <limits>
 #include <fstream>
 #include "../Headers/Agency.h"
@@ -77,6 +78,10 @@ Seller &Agency::getSellerRef() {
     return *sellers.find(sellerName)->second;
 }
 
+Seller &Agency::getSellerRef(const std::string &sellerName) {
+    return *sellers.find(sellerName)->second;
+}
+
 void Agency::show() const {
     for (const auto &good : goods) {
         good->show();
@@ -135,157 +140,244 @@ void Agency::save() {
 }
 
 void Agency::load() {
-    string sellerName;
-    string sellerAddress;
+    string buffer;
+    string name;
+    string address;
     ifstream sellerFile("../Data/vendeurs.txt");
     if (sellerFile.is_open()) {
-        while (getline(sellerFile, sellerName)) {
-            getline(sellerFile, sellerAddress);
-            sellers[sellerName] = make_shared<Seller>(sellerName, sellerAddress);
+        while (getline(sellerFile, name)) {
+            getline(sellerFile, address);
+            sellers[name] = make_shared<Seller>(name, address);
             sellerFile.ignore();
         }
         sellerFile.close();
     }
+
+    ifstream buyerFile("../Data/acheteurs.txt");
+    if (buyerFile.is_open()) {
+        while (getline(sellerFile, name)) {
+            getline(sellerFile, address);
+            while (buffer != "</VisitedGoods>") {
+                getline(buyerFile, buffer);
+            }
+            buyers[name] = make_shared<Buyer>(name, address);
+            sellerFile.ignore();
+        }
+        sellerFile.close();
+    }
+
 
     string goodType;
     double goodPrice;
     double goodArea;
     string goodAddress;
     string goodSellerName;
+    bool goodSold;
+    double proposalAmount;
 
     int resiNbRooms;
     bool resiGarage;
 
+    bool houseGarden;
+    bool houseSwim;
 
-    ifstream goodsFile;
-    goodsFile.open("../Data/biens.txt");
+    int flatFloor;
+    bool flatCave;
+    bool flatBalcony;
+    int flatNbBuildingFlats;
+
+    bool groundBuildable;
+
+    double proShowcaseSize;
+    bool proStoreRoom;
+
+    list<pair<shared_ptr<Buyer>, double>> proposals;
+
+    ifstream goodsFile("../Data/biens.txt");
     if (goodsFile.is_open()) {
+        shared_ptr<Good> toAdd;
         while (getline(goodsFile, goodType)) {
             goodsFile >> goodPrice;
             goodsFile >> goodArea;
             goodsFile.ignore();
             getline(goodsFile, goodAddress);
             getline(goodsFile, goodSellerName);
-
-            if (goodType == "Maison") {
-
-
-            } else if (goodType == "Appartement") {
-
-            } else if (goodType == "Terrain") {
-
-            } else if (goodType == "Local") {
-
+            goodsFile >> goodSold;
+            goodsFile.ignore();
+            goodsFile.ignore();
+            getline(goodsFile, buffer);
+            while (buffer != "</Propositions>") {
+                name = buffer;
+                goodsFile >> proposalAmount;
+                goodsFile.ignore();
+                proposals.emplace_back(buyers[name], proposalAmount);
+                getline(goodsFile, buffer);
             }
 
+            if (goodType == "Maison" || goodType == "Appartement") {
+                goodsFile >> resiNbRooms;
+                goodsFile >> resiGarage;
+
+                if (goodType == "Maison") {
+                    goodsFile >> houseGarden;
+                    goodsFile >> houseSwim;
+                    toAdd = shared_ptr<Good>(
+                            new House(goodPrice, goodAddress, goodArea, getSellerRef(goodSellerName), goodSold,
+                                      resiNbRooms,
+                                      resiGarage, houseGarden, houseSwim));
+                } else {
+                    goodsFile >> flatFloor;
+                    goodsFile >> flatCave;
+                    goodsFile >> flatBalcony;
+                    goodsFile >> flatNbBuildingFlats;
+                    toAdd = shared_ptr<Good>(
+                            new Flat(goodPrice, goodAddress, goodArea, getSellerRef(goodSellerName), goodSold,
+                                     resiNbRooms,
+                                     resiGarage, flatFloor, flatCave, flatBalcony, flatNbBuildingFlats));
+                }
+
+            } else if (goodType == "Terrain") {
+                goodsFile >> groundBuildable;
+                toAdd = shared_ptr<Good>(
+                        new Ground(goodPrice, goodAddress, goodArea, getSellerRef(goodSellerName),
+                                   goodSold, groundBuildable));
+
+            } else if (goodType == "Local") {
+                goodsFile >> proShowcaseSize;
+                goodsFile >> proStoreRoom;
+                toAdd = shared_ptr<Good>(
+                        new Professional(goodPrice, goodAddress, goodArea, getSellerRef(goodSellerName), goodSold,
+                                         proShowcaseSize, proStoreRoom));
+            }
+            for (const auto &proposal: proposals) {
+                toAdd->addProposal(proposal.first, proposal.second);
+            }
+
+            goods.push_back(toAdd);
+            sellers[goodSellerName]->addGood(toAdd);
+            goodsFile.ignore();
         }
         goodsFile.close();
     }
 
+    buyerFile.open("../Data/acheteurs.txt");
+    if (buyerFile.is_open()) {
+        while (getline(sellerFile, name)) {
+            getline(sellerFile, address);
+            while (buffer != "</VisitedGoods>") {
+                getline(buyerFile, buffer);
+            }
+            buyers[name] = make_shared<Buyer>(name, address);
+            sellerFile.ignore();
+        }
+        sellerFile.close();
+    }
 }
 
-shared_ptr<Buyer> Agency::findBuyer(){
+
+shared_ptr<Buyer> Agency::findBuyer() {
 // Vérification si l'acheteur existe, récupération de l adresse de l'objet ou proposition de création de l'objet buyer
     cout << "Quelle est le nom de l'acheteur\n?";
     string nomAcheteur;
     getline(cin, nomAcheteur); // vérifier que ca autorise les espaces si on décide d entré nom prénom 
-    map<string, shared_ptr<Buyer>>::iterator trouve = buyers.find(nomAcheteur);
+    auto trouve = buyers.find(nomAcheteur);
 
-    if(trouve == buyers.end())
-    {
+    if (trouve == buyers.end()) {
         cout << "L'acheteur n'est pas enregistré dans l'agence\n";
         cout << "Voulez-vous ajouter cette acheteur?\n";
-		bool rep = Utils::yesOrNo();
-        if (rep == true){
-			shared_ptr<Buyer> ptrNewBuyer;
-			ptrNewBuyer = shared_ptr<Buyer>(new Buyer());
-			buyers[ptrNewBuyer->getName()] = ptrNewBuyer;
-        }
-        else if(rep == false){
+        if (Utils::yesOrNo()) {
+            shared_ptr<Buyer> ptrNewBuyer;
+            ptrNewBuyer = make_shared<Buyer>();
+            buyers[ptrNewBuyer->getName()] = ptrNewBuyer;
+        } else {
             return nullptr;
         }
-    }
-    else{
-        return trouve->second; 
+    } else {
+        return trouve->second;
     }
 }
 
-shared_ptr<Seller> Agency::findSeller(){
+std::shared_ptr<Good>
+Agency::getGood(double price, double area, const std::string &address, const std::string &sellerName) {
+    for (auto goodPtr: goods) {
+        if (goodPtr->getPrice() == price
+            && goodPtr->getArea() == area
+            && goodPtr->getAddress() == address
+            && goodPtr->getSeller().getName() == sellerName) {
+            return goodPtr;
+        }
+    }
+}
+
+shared_ptr<Seller> Agency::findSeller() {
     // Vérification si le vendeur existe, récupération de l adresse de l'objet ou proposition de création de l'objet seller
     cout << "Quelle est le nom de l'acheteur?\n";
     string nomVendeur;
-    map<string, shared_ptr<Seller>>::iterator trouve = sellers.find(nomVendeur);
+    auto trouve = sellers.find(nomVendeur);
 
-    if(trouve == sellers.end()){
+    if (trouve == sellers.end()) {
         cout << "Le vendeur n'est pas enregistré dans l'agence\n";
         return nullptr;
-    }
-    else{
-        return trouve->second; 
+    } else {
+        return trouve->second;
     }
 
 }
 
-shared_ptr<Good> Agency::findGood(){ //recherche d'un bien via son adresse
-	cout << "Quelle est l'adresse du bien?\n";
-	string adresse;
-	getline(cin, adresse);
-	list<shared_ptr<Good>>::iterator itGood = goods.begin();
-	while (itGood != goods.end()) {
-		if ((*itGood)->getAddress() == adresse) {
-			return *itGood;
-		}
-		else {
-			itGood++;
-		}
-	}
-	cout << "L'adresse ne correspond à aucun bien\n";
-	return nullptr;
+shared_ptr<Good> Agency::findGood() { //recherche d'un bien via son adresse
+    cout << "Quelle est l'adresse du bien?\n";
+    string adresse;
+    getline(cin, adresse);
+    auto itGood = goods.begin();
+    while (itGood != goods.end()) {
+        if ((*itGood)->getAddress() == adresse) {
+            return *itGood;
+        } else {
+            itGood++;
+        }
+    }
+    cout << "L'adresse ne correspond à aucun bien\n";
+    return nullptr;
 }
 
-/*1. trouver le bien
-2. trouver l acheteur
-3. demander le prix
-4. ajouter la proposition d achat dans la map de proposition du bien*/
-void Agency::addProposal(){ //mettre des possibilité de sortie de boucle meme si on en trouve pas d acheteur ou de bien
+/**
+ * //mettre des possibilité de sortie de boucle meme si on en trouve pas d acheteur ou de bien
+ * 1. trouver le bien
+ * 2. trouver l acheteur
+ * 3. demander le prix
+ * 4. ajouter la proposition d achat dans la map de proposition du bien
+ * */
+void Agency::addProposal() {
+    shared_ptr<Good> ptrBien = nullptr;
+    while (ptrBien == nullptr) {
+        cout << "Souhaitez-vous rechercher un bien?\n";
+        if (Utils::yesOrNo()) {
+            ptrBien = Agency::findGood();
+        } else {
+            cout << "Vous n'avez pas sélectionné de bien\n";
+            break;
+        }
+    }
 
-	shared_ptr<Good> ptrBien = nullptr;
-	while (ptrBien == nullptr) {
-		cout << "Souhaitez-vous rechercher un bien?\n";
-		bool rep;
-		rep = Utils::yesOrNo();
-		if (rep == true) {
-			ptrBien = Agency::findGood();
-		}
-		else if (rep == false) {
-			cout << "Vous n'avez pas sélectionné de bien\n";
-			break;
-		}
-	}
+    if (ptrBien != nullptr) {
+        shared_ptr<Buyer> ptrAcheteur = nullptr;
+        while (ptrAcheteur == nullptr) {
+            cout << "Souhaitez-vous rechercher un Acheteur?\n";
+            if (Utils::yesOrNo()) {
+                ptrAcheteur = Agency::findBuyer();
+            } else {
+                cout << "Vous n'avez pas sélectionné de bien\n";
+                break;
+            }
+        }
 
-	if (ptrBien != nullptr) {
-		shared_ptr<Buyer> ptrAcheteur = nullptr;
-		while (ptrAcheteur == nullptr) {
-			cout << "Souhaitez-vous rechercher un Acheteur?\n";
-			bool rep;
-			rep = Utils::yesOrNo();
-			if (rep == true) {
-				ptrAcheteur = Agency::findBuyer();
-			}
-			else if (rep == false) {
-				cout << "Vous n'avez pas sélectionné de bien\n";
-				break;
-			}
-		}
-
-		if (ptrBien != nullptr) {
-			cout << "Quel est le prix proposé par l'acheteur?\n";
-			double prix;
-			cin >> prix;
-			cin.ignore();
-			ptrBien->addProposal(ptrAcheteur, prix);
-		}
-	}
-
+        if (ptrBien != nullptr) {
+            cout << "Quel est le prix proposé par l'acheteur?\n";
+            double prix;
+            cin >> prix;
+            cin.ignore();
+            ptrBien->addProposal(ptrAcheteur, prix);
+        }
+    }
 }
 

@@ -16,8 +16,8 @@ private:
     bool storeRoom;
 
 public:
-    Professional(double price, const std::string &address, double area, Seller &sellerRef, double showcaseSize,
-                 bool storeRoom);
+    Professional(double price, const std::string &address, double area, Seller &sellerRef, bool sold,
+                 double showcaseSize, bool storeRoom);
 
     explicit Professional(Seller &sellerRef);
 

@@ -12,8 +12,8 @@
 using namespace std;
 
 
-Ground::Ground(double price, const string &address, double area, Seller &sellerRef,
-               bool buildable) : Good(price, address, area, sellerRef), buildable(buildable) {}
+Ground::Ground(double price, const std::string &address, double area, Seller &sellerRef, bool sold, bool buildable)
+        : Good(price, address, area, sellerRef, sold), buildable(buildable) {}
 
 Ground::Ground(Seller &sellerRef) : Good(sellerRef) {
     cout << "Peut-on construire sur le terrain ?\n";

@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by eliot on 25/02/19.
 //
@@ -8,7 +10,7 @@
 #include "../../Headers/Clients/Client.h"
 using namespace std;
 
-Client::Client(const string &name, const string &address) : name(name), address(address) {}
+Client::Client(string name, string address) : name(move(name)), address(move(address)) {}
 
 Client::Client() {
     cout << "Quel est le nom du client ?\n";
@@ -25,3 +27,5 @@ void Client::save(std::ofstream &file) const {
     file << name << endl;
     file << address << endl;
 }
+
+

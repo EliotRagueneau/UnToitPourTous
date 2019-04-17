@@ -14,7 +14,7 @@ private:
 public:
     explicit House(Seller &sellerRef);
 
-    House(double price, const std::string &address, double area, Seller &sellerRef, int nbRooms, bool garage,
+    House(double price, const std::string &address, double area, Seller &sellerRef, bool sold, int nbRooms, bool garage,
           bool garden, bool swimmingPool);
 
     virtual void show() const;

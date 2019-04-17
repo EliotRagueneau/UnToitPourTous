@@ -14,13 +14,13 @@ protected:
     std::string name;
     std::string address;
 public:
-    Client(const std::string &name, const std::string &address);
+    Client(std::string name, std::string address);
 
     std::string &getName();
 
     Client();
 
-    void save(std::ofstream& file) const;
+    virtual void save(std::ofstream& file) const;
 
 };
 

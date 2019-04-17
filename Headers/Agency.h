@@ -24,9 +24,17 @@ private:
 	std::shared_ptr<Buyer> findBuyer();
 	std::shared_ptr<Seller> findSeller();
 	std::shared_ptr<Good> findGood();
+
+
+    std::shared_ptr<Good>
+    getGood(double price, double area, const std::string& address, const std::string& sellerName);
+
+
 public:
 
     Seller &getSellerRef();
+
+    Seller &getSellerRef(const std::string &sellerName);
 
     void addGood();
 

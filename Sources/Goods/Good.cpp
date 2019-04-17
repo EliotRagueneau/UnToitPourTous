@@ -31,8 +31,9 @@ Good::Good(Seller &sellerRef) : sellerRef(sellerRef) {
     id = ++nbInstance;
 }
 
-Good::Good(double price, const string &address, double area, Seller &sellerRef) : price(price), address(address),
-                                                                                  area(area), sellerRef(sellerRef) {
+Good::Good(double price, const std::string &address, double area, Seller &sellerRef, bool sold)
+        : price(price), address(address),
+          area(area), sellerRef(sellerRef), sold(sold) {
     id = ++nbInstance;
 }
 
@@ -58,6 +59,33 @@ void Good::save(ofstream &file) const {
     file << area << endl;
     file << address << endl;
     file << sellerRef.getName() << endl;
+    file << sold << endl;
+}
+
+void Good::simpleSave(std::ofstream &file) const {
+    file << price << endl;
+    file << area << endl;
+    file << address << endl;
+    file << sellerRef.getName() << endl;
+    file << "<Propositions>" << endl;
+    for (const auto& pair : proposalsMap) {
+        file << pair.first->getName() << endl;
+        file << pair.second << endl;
+    }
+    file << "</Propositions>" << endl;
+
+}
+
+Good::~Good() {
+    proposalsMap.clear();
+}
+
+double Good::getPrice() const {
+    return price;
+}
+
+double Good::getArea() const {
+    return area;
 }
 
 void Good::addProposal(const shared_ptr<Buyer> &ptrBuyer, double price) {

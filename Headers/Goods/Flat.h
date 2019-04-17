@@ -17,8 +17,8 @@ private:
 public:
     explicit Flat(Seller &sellerRef);
 
-    Flat(double price, const std::string &address, double area, Seller &sellerRef, int nbRooms, bool garage, int floor,
-         bool cave, bool balcony, int nbBuildingFlats);
+    Flat(double price, const std::string &address, double area, Seller &sellerRef, bool sold, int nbRooms, bool garage,
+         int floor, bool cave, bool balcony, int nbBuildingFlats);
 
     virtual void show() const;
 

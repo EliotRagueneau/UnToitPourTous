@@ -10,8 +10,10 @@
 
 using namespace std;
 
-House::House(double price, const string &address, double area, Seller &sellerRef, int nbRooms, bool garage, bool garden,
-             bool swimmingPool) : Residential(price, address, area, sellerRef, nbRooms, garage), garden(garden),
+House::House(double price, const std::string &address, double area, Seller &sellerRef, bool sold, int nbRooms,
+             bool garage,
+             bool garden, bool swimmingPool)
+        : Residential(price, address, area, sellerRef, sold, nbRooms, garage), garden(garden),
                                   swimmingPool(swimmingPool) {}
 
 House::House(Seller &sellerRef) : Residential(sellerRef) {

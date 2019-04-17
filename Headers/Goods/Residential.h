@@ -16,7 +16,8 @@ protected:
     bool garage;
 public:
 
-    Residential(double price, const std::string &address, double area, Seller &sellerRef, int nbRooms, bool garage);
+    Residential(double price, const std::string &address, double area, Seller &sellerRef, bool sold,
+                int nbRooms, bool garage);
 
     explicit Residential(Seller &sellerRef);
 

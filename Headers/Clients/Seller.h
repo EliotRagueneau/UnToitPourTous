@@ -22,6 +22,8 @@ public:
     Seller(const std::string &name, const std::string &address);
 
     Seller();
+
+    virtual ~Seller();
 };
 
 

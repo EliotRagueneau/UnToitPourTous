@@ -10,10 +10,12 @@
 
 using namespace std;
 
-Flat::Flat(double price, const string &address, double area, Seller &sellerRef, int nbRooms, bool garage, int floor,
-           bool cave, bool balcony, int nbBuildingFlats) : Residential(price, address, area, sellerRef, nbRooms,
-                                                                       garage), floor(floor), cave(cave),
-                                                           balcony(balcony), nbBuildingFlats(nbBuildingFlats) {}
+Flat::Flat(double price, const std::string &address, double area, Seller &sellerRef, bool sold, int nbRooms,
+           bool garage, int floor, bool cave, bool balcony, int nbBuildingFlats) : Residential(price, address, area,
+                                                                                               sellerRef, sold, nbRooms,
+                                                                                               garage), floor(floor),
+                                                                                   cave(cave), balcony(balcony),
+                                                                                   nbBuildingFlats(nbBuildingFlats) {}
 
 Flat::Flat(Seller &sellerRef) : Residential(sellerRef) {
     cout << "A quel étage se trouve l'appartement ?\n";
@@ -43,6 +45,9 @@ void Flat::show() const {
 void Flat::save(std::ofstream &file) const {
     file << "Appartement\n";
     Residential::save(file);
+    file << floor << endl;
     file << balcony << endl;
     file << cave << endl;
+    file << nbBuildingFlats << endl;
+
 }

@@ -8,14 +8,24 @@
 
 #include "Client.h"
 #include <list>
+#include <memory>
+
 //#include "../Goods/Good.h"
 class Good;
 
 class Buyer : public Client {
 private:
-    std::list<Good*> visitList{};
+    std::list<std::shared_ptr<Good>> visitList;
+public:
+    virtual ~Buyer();
 
+    Buyer();
+
+    Buyer(const std::string &name, const std::string &address);
+
+    void save(std::ofstream& file) const;
+
+    void visit(const std::shared_ptr<Good>&);
 };
-
 
 #endif //UNTOITPOURTOUS_BUYERS_H
