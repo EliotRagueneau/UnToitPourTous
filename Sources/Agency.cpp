@@ -277,7 +277,7 @@ void Agency::load() {
 
 shared_ptr<Buyer> Agency::findBuyer() {
 // Vérification si l'acheteur existe, récupération de l adresse de l'objet ou proposition de création de l'objet buyer
-    cout << "Quelle est le nom de l'acheteur\n?";
+    cout << "Quel est le nom de l'acheteur?\n";
     string nomAcheteur;
     getline(cin, nomAcheteur); // vérifier que ca autorise les espaces si on décide d entré nom prénom 
     auto trouve = buyers.find(nomAcheteur);
@@ -287,8 +287,9 @@ shared_ptr<Buyer> Agency::findBuyer() {
         cout << "Voulez-vous ajouter cette acheteur?\n";
         if (Utils::yesOrNo()) {
             shared_ptr<Buyer> ptrNewBuyer;
-            ptrNewBuyer = make_shared<Buyer>();
+            ptrNewBuyer = shared_ptr<Buyer>(new Buyer());
             buyers[ptrNewBuyer->getName()] = ptrNewBuyer;
+			return ptrNewBuyer;
         } else {
             return nullptr;
         }
@@ -311,7 +312,7 @@ Agency::getGood(double price, double area, const std::string &address, const std
 
 shared_ptr<Seller> Agency::findSeller() {
     // Vérification si le vendeur existe, récupération de l adresse de l'objet ou proposition de création de l'objet seller
-    cout << "Quelle est le nom de l'acheteur?\n";
+    cout << "Quel est le nom de l'acheteur?\n";
     string nomVendeur;
     auto trouve = sellers.find(nomVendeur);
 
@@ -365,18 +366,16 @@ void Agency::addProposal() {
             cout << "Souhaitez-vous rechercher un Acheteur?\n";
             if (Utils::yesOrNo()) {
                 ptrAcheteur = Agency::findBuyer();
+				cout << "Quel est le prix proposé par l'acheteur?\n";
+				double prix;
+				cin >> prix;
+				cin.ignore();
+				ptrBien->addProposal(ptrAcheteur, prix);
+				cout << "Proposition enregistée\n"; // ajouter une methode show pour les propositions
             } else {
                 cout << "Vous n'avez pas sélectionné de bien\n";
                 break;
             }
-        }
-
-        if (ptrBien != nullptr) {
-            cout << "Quel est le prix proposé par l'acheteur?\n";
-            double prix;
-            cin >> prix;
-            cin.ignore();
-            ptrBien->addProposal(ptrAcheteur, prix);
         }
     }
 }
