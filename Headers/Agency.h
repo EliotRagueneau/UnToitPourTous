@@ -21,6 +21,9 @@ private:
     std::list<std::shared_ptr<Good>> goods;
     std::map<std::string, std::shared_ptr<Seller>> sellers;
     std::map<std::string, std::shared_ptr<Buyer>> buyers;
+	std::shared_ptr<Buyer> findBuyer();
+	std::shared_ptr<Seller> findSeller();
+	std::shared_ptr<Good> findGood();
 public:
 
     Seller &getSellerRef();
@@ -43,11 +46,6 @@ public:
 
     void addProposal();
 
-	shared_ptr<Buyer> findBuyer();
-
-	shared_ptr<Seller> findSeller();
-
-	shared_ptr<Good> findGood();
 };
 
 

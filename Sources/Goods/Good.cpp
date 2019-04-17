@@ -60,4 +60,7 @@ void Good::save(ofstream &file) const {
     file << sellerRef.getName() << endl;
 }
 
+void Good::addProposal(const shared_ptr<Buyer> &ptrBuyer, double price) {
+	proposalsMap[ptrBuyer] = price;
+}
 

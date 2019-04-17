@@ -13,6 +13,10 @@
 #include "../Headers/Goods/Flat.h"
 #include "../Headers/Goods/Ground.h"
 #include "../Headers/Goods/Professional.h"
+#include "../Headers/Clients/Client.h"
+#include "../Headers/Clients/Buyer.h"
+#include "../Headers/Clients/Seller.h"
+#include "../Headers/Utils.h"
 
 using namespace std;
 
@@ -191,14 +195,14 @@ shared_ptr<Buyer> Agency::findBuyer(){
     {
         cout << "L'acheteur n'est pas enregistré dans l'agence\n";
         cout << "Voulez-vous ajouter cette acheteur?\n";
-        cout << "O pour oui et N pour non\n";
-        string rep;
-        getline(cin,rep);
-        if (rep == "o" || rep == "O"){
-            Buyer::Buyer();
+		bool rep = Utils::yesOrNo();
+        if (rep == true){
+			shared_ptr<Buyer> ptrNewBuyer(0);
+			ptrNewBuyer = shared_ptr<Buyer>(new Buyer());
+			buyers[ptrNewBuyer->getName()] = ptrNewBuyer;
         }
-        else {
-            return NULL;
+        else if(rep == false){
+            return nullptr;
         }
     }
     else{
@@ -214,7 +218,7 @@ shared_ptr<Seller> Agency::findSeller(){
 
     if(trouve == sellers.end()){
         cout << "Le vendeur n'est pas enregistré dans l'agence\n";
-        return NULL;
+        return nullptr;
     }
     else{
         return trouve->second; 
@@ -228,18 +232,60 @@ shared_ptr<Good> Agency::findGood(){ //recherche d'un bien via son adresse
 	getline(cin, adresse);
 	list<shared_ptr<Good>>::iterator itGood = goods.begin();
 	while (itGood != goods.end()) {
-		shared_ptr<Good> ptrGood = *itGood;
-		if (ptrGood.get().getAddress()) {
-
+		if ((*itGood)->getAddress() == adresse) {
+			return *itGood;
+		}
+		else {
+			itGood++;
 		}
 	}
+	cout << "L'adresse ne correspond à aucun bien\n";
+	return nullptr;
 }
 
-void Agency::addProposal(){
+/*1. trouver le bien
+2. trouver l acheteur
+3. demander le prix
+4. ajouter la proposition d achat dans la map de proposition du bien*/
+void Agency::addProposal(){ //mettre des possibilité de sortie de boucle meme si on en trouve pas d acheteur ou de bien
 
-    cout << "Quel est le prix proposé?\n";
-    double prix;
-	cin >> prix;
-	cin.ignore();
+	shared_ptr<Good> ptrBien = nullptr;
+	while (ptrBien == nullptr) {
+		cout << "Souhaitez-vous rechercher un bien?\n";
+		bool rep;
+		rep = Utils::yesOrNo();
+		if (rep == true) {
+			ptrBien = Agency::findGood();
+		}
+		else if (rep == false) {
+			cout << "Vous n'avez pas sélectionné de bien\n";
+			break;
+		}
+	}
+
+	if (ptrBien != nullptr) {
+		shared_ptr<Buyer> ptrAcheteur = nullptr;
+		while (ptrAcheteur == nullptr) {
+			cout << "Souhaitez-vous rechercher un Acheteur?\n";
+			bool rep;
+			rep = Utils::yesOrNo();
+			if (rep == true) {
+				ptrAcheteur = Agency::findBuyer();
+			}
+			else if (rep == false) {
+				cout << "Vous n'avez pas sélectionné de bien\n";
+				break;
+			}
+		}
+
+		if (ptrBien != nullptr) {
+			cout << "Quel est le prix proposé par l'acheteur?\n";
+			double prix;
+			cin >> prix;
+			cin.ignore();
+			ptrBien->addProposal(ptrAcheteur, prix);
+		}
+	}
+
 }
 

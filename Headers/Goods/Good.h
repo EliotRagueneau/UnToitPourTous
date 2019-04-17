@@ -35,6 +35,9 @@ public:
 
     virtual void show() const;
 
+
+	void addProposal(const std::shared_ptr<Buyer> &ptrBuyer, double price);
+
     virtual void save(std::ofstream &file) const;
 };
 
