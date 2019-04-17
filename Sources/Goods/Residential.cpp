@@ -11,11 +11,11 @@
 using namespace std;
 
 
-Residential::Residential(double price, const string &address, double area, Seller &sellerRef, bool sold,
+Residential::Residential(double price, const string &address, double area, shared_ptr<Seller> sellerRef, bool sold,
                          int nbRooms, bool garage)
         : Good(price, address, area, sellerRef, sold), nbRooms(nbRooms), garage(garage) {}
 
-Residential::Residential(Seller &sellerRef) : Good(sellerRef) {
+Residential::Residential(shared_ptr<Seller> sellerRef) : Good(sellerRef) {
     cout << "Combien y a t'il de pièces dans la résidence ?\n";
     cin >> nbRooms;
     cout << "Il y a t'il un garage dans la résidence ?\n";

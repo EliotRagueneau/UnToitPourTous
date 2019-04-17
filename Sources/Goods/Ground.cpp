@@ -12,10 +12,11 @@
 using namespace std;
 
 
-Ground::Ground(double price, const std::string &address, double area, Seller &sellerRef, bool sold, bool buildable)
+Ground::Ground(double price, const std::string &address, double area, shared_ptr<Seller> sellerRef, bool sold,
+               bool buildable)
         : Good(price, address, area, sellerRef, sold), buildable(buildable) {}
 
-Ground::Ground(Seller &sellerRef) : Good(sellerRef) {
+Ground::Ground(shared_ptr<Seller> sellerRef) : Good(sellerRef) {
     cout << "Peut-on construire sur le terrain ?\n";
     buildable = Utils::yesOrNo();
 }

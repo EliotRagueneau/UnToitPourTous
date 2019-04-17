@@ -15,9 +15,10 @@ private:
     bool balcony;
     int nbBuildingFlats;
 public:
-    explicit Flat(Seller &sellerRef);
+    explicit Flat(std::shared_ptr<Seller> sellerRef);
 
-    Flat(double price, const std::string &address, double area, Seller &sellerRef, bool sold, int nbRooms, bool garage,
+    Flat(double price, const std::string &address, double area, std::shared_ptr<Seller> sellerRef, bool sold,
+         int nbRooms, bool garage,
          int floor, bool cave, bool balcony, int nbBuildingFlats);
 
     virtual void show() const;

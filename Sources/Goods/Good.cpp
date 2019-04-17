@@ -1,3 +1,7 @@
+#include <utility>
+
+#include <utility>
+
 //
 // Created by eliot on 25/02/19.
 //
@@ -20,7 +24,7 @@ Good::Good(const Good &src) : price(src.price),
     id = ++nbInstance;
 }
 
-Good::Good(Seller &sellerRef) : sellerRef(sellerRef) {
+Good::Good(shared_ptr<Seller> sellerRef) : sellerRef(std::move(sellerRef)) {
     cout << "Quelle est l'adresse du bien ?\n";
     getline(cin, address);
     cout << "Quelle est le prix du bien (€)?\n";
@@ -31,13 +35,13 @@ Good::Good(Seller &sellerRef) : sellerRef(sellerRef) {
     id = ++nbInstance;
 }
 
-Good::Good(double price, const std::string &address, double area, Seller &sellerRef, bool sold)
-        : price(price), address(address),
-          area(area), sellerRef(sellerRef), sold(sold) {
+Good::Good(double price, std::string address, double area, shared_ptr<Seller> sellerRef, bool sold)
+        : price(price), address(std::move(address)),
+          area(area), sellerRef(std::move(sellerRef)), sold(sold) {
     id = ++nbInstance;
 }
 
-Seller &Good::getSeller() const {
+shared_ptr<Seller> Good::getSeller() const {
     return sellerRef;
 }
 
@@ -51,29 +55,28 @@ void Good::show() const {
          "\t-Prix : " << price << "€\n" <<
          "\t-Surface : " << area << "m²\n" <<
          "\t-Adresse : " << address << "\n" <<
-         "\t-Nom du vendeur : " << sellerRef.getName() << "\n";
+         "\t-Nom du vendeur : " << sellerRef->getName() << "\n";
 }
 
 void Good::save(ofstream &file) const {
     file << price << endl;
     file << area << endl;
     file << address << endl;
-    file << sellerRef.getName() << endl;
+    file << sellerRef->getName() << endl;
     file << sold << endl;
-}
-
-void Good::simpleSave(std::ofstream &file) const {
-    file << price << endl;
-    file << area << endl;
-    file << address << endl;
-    file << sellerRef.getName() << endl;
     file << "<Propositions>" << endl;
     for (const auto& pair : proposalsMap) {
         file << pair.first->getName() << endl;
         file << pair.second << endl;
     }
     file << "</Propositions>" << endl;
+}
 
+void Good::simpleSave(std::ofstream &file) const {
+    file << address << endl;
+    file << price << endl;
+    file << area << endl;
+    file << sellerRef->getName() << endl;
 }
 
 Good::~Good() {

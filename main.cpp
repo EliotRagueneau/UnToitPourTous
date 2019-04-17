@@ -12,9 +12,7 @@ using namespace std;
 int main() {
     Agency unToitPourTous;
 
-    unToitPourTous.addGood();
-    unToitPourTous.addGood();
-    unToitPourTous.save();
+    unToitPourTous.load();
 
     unToitPourTous.show();
 }

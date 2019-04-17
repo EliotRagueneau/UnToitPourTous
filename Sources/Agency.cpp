@@ -23,8 +23,8 @@ using namespace std;
 
 void Agency::addGood() {
     cout << "Vous allez rajouter un nouveau bien.\n";
-    Seller sellerRef = getSellerRef();
-    string sellerName = sellerRef.getName();
+    std::shared_ptr<Seller> sellerRef = getSellerRef();
+    string sellerName = sellerRef->getName();
 
     cout << "Quel type de bien souhaitez vous rajouter ?\n";
     cout << "\t-1. Une maison\n";
@@ -63,7 +63,7 @@ void Agency::addGood() {
     cout << "Bien ajouté\n\n";
 }
 
-Seller &Agency::getSellerRef() {
+shared_ptr<Seller> Agency::getSellerRef() {
     cout << "Quel est le nom du vendeur ?\n";
 
     string sellerName;
@@ -75,11 +75,11 @@ Seller &Agency::getSellerRef() {
         getline(cin, sellerAddress);
         sellers[sellerName] = make_shared<Seller>(sellerName, sellerAddress);
     }
-    return *sellers.find(sellerName)->second;
+    return sellers.find(sellerName)->second;
 }
 
-Seller &Agency::getSellerRef(const std::string &sellerName) {
-    return *sellers.find(sellerName)->second;
+shared_ptr<Seller> Agency::getSellerRef(const std::string &sellerName) {
+    return sellers.find(sellerName)->second;
 }
 
 void Agency::show() const {
@@ -204,7 +204,7 @@ void Agency::load() {
             getline(goodsFile, goodSellerName);
             goodsFile >> goodSold;
             goodsFile.ignore();
-            goodsFile.ignore();
+            getline(goodsFile, buffer);
             getline(goodsFile, buffer);
             while (buffer != "</Propositions>") {
                 name = buffer;
@@ -255,7 +255,8 @@ void Agency::load() {
 
             goods.push_back(toAdd);
             sellers[goodSellerName]->addGood(toAdd);
-            goodsFile.ignore();
+            getline(goodsFile, buffer);
+            getline(goodsFile, buffer);
         }
         goodsFile.close();
     }
@@ -264,10 +265,18 @@ void Agency::load() {
     if (buyerFile.is_open()) {
         while (getline(sellerFile, name)) {
             getline(sellerFile, address);
+
+            getline(goodsFile, buffer);
+            getline(goodsFile, buffer);
             while (buffer != "</VisitedGoods>") {
-                getline(buyerFile, buffer);
+                goodAddress = buffer;
+                goodsFile >> goodPrice;
+                goodsFile >> goodArea;
+                goodsFile.ignore();
+                getline(goodsFile, goodSellerName);
+                buyers[name]->visit(getGood(goodPrice,goodArea, goodAddress, goodSellerName));
+                getline(goodsFile, buffer);
             }
-            buyers[name] = make_shared<Buyer>(name, address);
             sellerFile.ignore();
         }
         sellerFile.close();
@@ -303,10 +312,11 @@ Agency::getGood(double price, double area, const std::string &address, const std
         if (goodPtr->getPrice() == price
             && goodPtr->getArea() == area
             && goodPtr->getAddress() == address
-            && goodPtr->getSeller().getName() == sellerName) {
+            && goodPtr->getSeller()->getName() == sellerName) {
             return goodPtr;
         }
     }
+    return nullptr;
 }
 
 shared_ptr<Seller> Agency::findSeller() {

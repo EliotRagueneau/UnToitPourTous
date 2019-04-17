@@ -10,14 +10,14 @@
 
 using namespace std;
 
-Flat::Flat(double price, const std::string &address, double area, Seller &sellerRef, bool sold, int nbRooms,
+Flat::Flat(double price, const std::string &address, double area, shared_ptr<Seller> sellerRef, bool sold, int nbRooms,
            bool garage, int floor, bool cave, bool balcony, int nbBuildingFlats) : Residential(price, address, area,
                                                                                                sellerRef, sold, nbRooms,
                                                                                                garage), floor(floor),
                                                                                    cave(cave), balcony(balcony),
                                                                                    nbBuildingFlats(nbBuildingFlats) {}
 
-Flat::Flat(Seller &sellerRef) : Residential(sellerRef) {
+Flat::Flat(shared_ptr<Seller> sellerRef) : Residential(sellerRef) {
     cout << "A quel étage se trouve l'appartement ?\n";
     cin >> floor;
     cout << "L'apparatement possède t'il un balcon ?\n";

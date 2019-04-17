@@ -32,9 +32,9 @@ private:
 
 public:
 
-    Seller &getSellerRef();
+    std::shared_ptr<Seller> getSellerRef();
 
-    Seller &getSellerRef(const std::string &sellerName);
+    std::shared_ptr<Seller> getSellerRef(const std::string &sellerName);
 
     void addGood();
 

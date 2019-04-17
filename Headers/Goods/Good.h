@@ -18,21 +18,21 @@ protected:
     double price;
     std::string address;
     double area;
-    Seller& sellerRef;
+    std::shared_ptr<Seller> sellerRef;
     int id;
     bool sold = false;
     std::map<std::shared_ptr<Buyer>, double> proposalsMap;
 
 public:
-    Seller &getSeller() const;
+    Good(double price, std::string address, double area, std::shared_ptr<Seller> sellerRef, bool sold);
 
-    Good(double price, const std::string &address, double area, Seller &sellerRef, bool sold);
-
-    std::string getAddress() const;
-
-    explicit Good(Seller & sellerRef);
+    explicit Good(std::shared_ptr<Seller> sellerRef);
 
     Good(const Good& src);
+
+    std::shared_ptr<Seller> getSeller() const;
+
+    std::string getAddress() const;
 
     virtual void show() const;
 

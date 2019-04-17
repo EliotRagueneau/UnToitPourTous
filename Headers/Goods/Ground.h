@@ -12,9 +12,10 @@ class Ground : public Good {
 private:
     bool buildable;
 public:
-    explicit Ground(Seller &sellerRef);
+    explicit Ground(std::shared_ptr<Seller> sellerRef);
 
-    Ground(double price, const std::string &address, double area, Seller &sellerRef, bool sold, bool buildable);
+    Ground(double price, const std::string &address, double area, std::shared_ptr<Seller> sellerRef, bool sold,
+           bool buildable);
 
     virtual void show() const;
 

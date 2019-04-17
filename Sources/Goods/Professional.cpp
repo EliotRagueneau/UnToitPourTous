@@ -10,12 +10,13 @@
 
 using namespace std;
 
-Professional::Professional(double price, const std::string &address, double area, Seller &sellerRef, bool sold,
+Professional::Professional(double price, const std::string &address, double area, shared_ptr<Seller> sellerRef,
+                           bool sold,
                            double showcaseSize, bool storeRoom)
         : Good(price, address, area, sellerRef, sold), showcaseSize(showcaseSize),
                                              storeRoom(storeRoom) {}
 
-Professional::Professional(Seller &sellerRef) : Good(sellerRef) {
+Professional::Professional(shared_ptr<Seller> sellerRef) : Good(sellerRef) {
     cout << "Quelle est la surface de la vitrine ?\n";
     cin >> showcaseSize;
     cout << "Le local professionnel possède-t'il une pièce de stockage ?\n";

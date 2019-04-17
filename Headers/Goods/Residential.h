@@ -16,10 +16,10 @@ protected:
     bool garage;
 public:
 
-    Residential(double price, const std::string &address, double area, Seller &sellerRef, bool sold,
+    Residential(double price, const std::string &address, double area, std::shared_ptr<Seller> sellerRef, bool sold,
                 int nbRooms, bool garage);
 
-    explicit Residential(Seller &sellerRef);
+    explicit Residential(std::shared_ptr<Seller> sellerRef);
 
     virtual void show() const;
 
