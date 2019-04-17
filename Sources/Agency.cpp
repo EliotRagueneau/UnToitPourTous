@@ -8,6 +8,7 @@
 #include <limits>
 #include <fstream>
 #include "../Headers/Agency.h"
+#include "../Headers/Goods/Good.h"
 #include "../Headers/Goods/House.h"
 #include "../Headers/Goods/Flat.h"
 #include "../Headers/Goods/Ground.h"
@@ -178,3 +179,67 @@ void Agency::load() {
     }
 
 }
+
+shared_ptr<Buyer> Agency::findBuyer(){
+// Vérification si l'acheteur existe, récupération de l adresse de l'objet ou proposition de création de l'objet buyer
+    cout << "Quelle est le nom de l'acheteur\n?";
+    string nomAcheteur;
+    getline(cin, nomAcheteur); // vérifier que ca autorise les espaces si on décide d entré nom prénom 
+    map<string, shared_ptr<Buyer>>::iterator trouve = buyers.find(nomAcheteur);
+
+    if(trouve == buyers.end())
+    {
+        cout << "L'acheteur n'est pas enregistré dans l'agence\n";
+        cout << "Voulez-vous ajouter cette acheteur?\n";
+        cout << "O pour oui et N pour non\n";
+        string rep;
+        getline(cin,rep);
+        if (rep == "o" || rep == "O"){
+            Buyer::Buyer();
+        }
+        else {
+            return NULL;
+        }
+    }
+    else{
+        return trouve->second; 
+    }
+}
+
+shared_ptr<Seller> Agency::findSeller(){
+    // Vérification si le vendeur existe, récupération de l adresse de l'objet ou proposition de création de l'objet seller
+    cout << "Quelle est le nom de l'acheteur\n?";
+    string nomVendeur;
+    map<string, shared_ptr<Seller>>::iterator trouve = sellers.find(nomVendeur);
+
+    if(trouve == sellers.end()){
+        cout << "Le vendeur n'est pas enregistré dans l'agence\n";
+        return NULL;
+    }
+    else{
+        return trouve->second; 
+    }
+
+}
+
+shared_ptr<Good> Agency::findGood(){ //recherche d'un bien via son adresse
+	cout << "Quelle est l'adresse du bien?";
+	string adresse;
+	getline(cin, adresse);
+	list<shared_ptr<Good>>::iterator itGood = goods.begin();
+	while (itGood != goods.end()) {
+		shared_ptr<Good> ptrGood = *itGood;
+		if (ptrGood.get().getAddress()) {
+
+		}
+	}
+}
+
+void Agency::addProposal(){
+
+    cout << "Quel est le prix proposé?\n";
+    double prix;
+	cin >> prix;
+	cin.ignore();
+}
+

@@ -12,9 +12,9 @@ Client::Client(const string &name, const string &address) : name(name), address(
 
 Client::Client() {
     cout << "Quel est le nom du client ?\n";
-    cin >> name;
+    getline(cin, name);
     cout << "Quel est l'adresse du client ?\n";
-    cin >> address;
+    getline(cin, address);
 }
 
 string &Client::getName() {

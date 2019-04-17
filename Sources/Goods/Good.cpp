@@ -40,6 +40,10 @@ Seller &Good::getSeller() const {
     return sellerRef;
 }
 
+string Good::getAddress() const {
+    return address;
+}
+
 void Good::show() const {
     cout << "Bien n°" << id << endl;
     cout <<

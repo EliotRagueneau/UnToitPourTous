@@ -21,12 +21,13 @@ protected:
     Seller& sellerRef;
     int id;
     bool sold = false;
-    std::map<Buyer, double> proposalsMap;
+    std::map<shared_ptr<Buyer>, double> proposalsMap;
 
 public:
     Seller &getSeller() const;
 
     Good(double price, const std::string &address, double area, Seller &sellerRef);
+    std::string getAddress() const;
 
     explicit Good(Seller & sellerRef);
 

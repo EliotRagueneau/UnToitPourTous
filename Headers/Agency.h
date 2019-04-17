@@ -41,6 +41,13 @@ public:
 
     void load();
 
+    void addProposal();
+
+	shared_ptr<Buyer> findBuyer();
+
+	shared_ptr<Seller> findSeller();
+
+	shared_ptr<Good> findGood();
 };
 
 
