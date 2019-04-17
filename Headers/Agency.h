@@ -43,11 +43,11 @@ public:
 
     void addProposal();
 
-    Buyer *findBuyer();
+	shared_ptr<Buyer> findBuyer();
 
-    Seller *findSeller();
+	shared_ptr<Seller> findSeller();
 
-    Good *findGood();
+	shared_ptr<Good> findGood();
 };
 
 

@@ -37,7 +37,7 @@ Seller *Good::getSellerRef() const {
     return sellerRef;
 }
 
-string getAddress() const {
+string Good::getAddress() const {
     return address;
 }
 
