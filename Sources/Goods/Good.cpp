@@ -127,3 +127,8 @@ void Good::cleanProposals() {
 void Good::setSellerRef(const std::shared_ptr<Seller>& seller) {
 	sellerRef = seller;
 }
+
+void Good::setPrice(const double &prix){
+	price = prix;
+}
+

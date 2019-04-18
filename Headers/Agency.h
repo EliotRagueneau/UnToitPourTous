@@ -82,6 +82,8 @@ public:
 	std::shared_ptr<Seller> getSellerRef();
 
 	std::shared_ptr<Seller> addSellerFromBuyer(const std::shared_ptr<Buyer> &seller);
+
+	void reSell();
 };
 
 

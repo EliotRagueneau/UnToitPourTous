@@ -85,6 +85,15 @@ shared_ptr<Seller> Agency::addSellerFromBuyer(const shared_ptr<Buyer> &seller){
 	return sellerRef;
 }
 
+void Agency::reSell(){
+	shared_ptr<Good> ptrGood = Agency::findGood();
+	ptrGood->setSold(false);
+	cout << "Quelle est le prix de mise en vente?\n";
+	double prix;
+	cin >> prix;
+	ptrGood->setPrice(prix);
+}
+
 void Agency::show() const {
     for (const auto &good : goods) {
         if (!good->isSold()) {

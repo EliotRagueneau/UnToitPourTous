@@ -64,6 +64,7 @@ public:
 
 	void setSellerRef(const std::shared_ptr<Seller> &seller);
 
+	void setPrice(const double &prix);
 };
 
 
