@@ -8,6 +8,7 @@
 class Utils {
 public:
     static bool yesOrNo();
+	static void menuPrincipal();
 
 };
 
