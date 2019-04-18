@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by eliot on 25/02/19.
 //
 
@@ -22,23 +22,20 @@ private:
     std::map<std::string, std::shared_ptr<Seller>> sellers;
     std::map<std::string, std::shared_ptr<Buyer>> buyers;
 
-    std::shared_ptr<Buyer> findBuyer();
-
-    std::shared_ptr<Seller> findSeller();
-
-    std::shared_ptr<Good> findGood();
-
-
     std::shared_ptr<Good>
     getGood(double price, double area, const std::string &address, const std::string &sellerName);
 
-    std::shared_ptr<Seller> getSellerRef();
 
-    std::shared_ptr<Seller> getSellerRef(const std::string &sellerName);
 
 
 public:
     std::list<std::shared_ptr<Good>> getGoods() const;
+
+	std::shared_ptr<Buyer> findBuyer();
+
+	std::shared_ptr<Seller> findSeller();
+
+	std::shared_ptr<Good> findGood();
 
     void addGood();
 
@@ -70,6 +67,10 @@ public:
     static std::list<std::shared_ptr<Good>> filterLowerArea(double areaThreshold, std::list<std::shared_ptr<Good>> goodsList);
 
     static std::list<std::shared_ptr<Good>> filterType(std::list<std::shared_ptr<Good>> goodsList);
+
+	std::shared_ptr<Seller> getSellerRef();
+
+	std::shared_ptr<Seller> getSellerRef(const std::string &sellerName);
 
 };
 

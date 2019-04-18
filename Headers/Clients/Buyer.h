@@ -25,7 +25,7 @@ public:
 
     void save(std::ofstream& file) const;
 
-    void visit(const std::shared_ptr<Good>&);
+    void visit(const std::shared_ptr<Good> &bien);
 };
 
 #endif //UNTOITPOURTOUS_BUYERS_H

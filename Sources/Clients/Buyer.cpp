@@ -27,4 +27,5 @@ void Buyer::visit(const shared_ptr<Good> &visitedGood) {
     visitList.push_back(visitedGood);
 }
 
+
 Buyer::Buyer() : Client() {}

@@ -34,13 +34,13 @@ int main() {
 			unToitPourTous.addGood();
 			break;
 		case 2: //Ajouter un vendeur
-			unToitPourTous.addSeller();
+			unToitPourTous.getSellerRef();
 			break;
 		case 3: // Ajouter un acheteur
 			unToitPourTous.addBuyer();
 			break;
 		case 4: // Faire une visite
-			unToitPourTous.addVisit();
+			unToitPourTous.visit();
 			break;
 		case 5: // Ajouter une proposition d'achat
 			unToitPourTous.addProposal();
@@ -53,7 +53,7 @@ int main() {
 		case 8: // Sauvegarder les biens
 			unToitPourTous.save();
 			break;
-		case 9: // Charger les biens à partir d'un fichier
+		case 9: // Charger les biens Ã  partir d'un fichier
 			unToitPourTous.load();
 			break;
 		case 0: // Quitter le programme
@@ -61,8 +61,8 @@ int main() {
 			cout << "Fermeture du programme\n";
 			break;
 		default:
-			cout << "Votre entrée est invalide\n";
-			cout << "Merci d'entrée une entier compris entre 0 et 9\n";
+			cout << "Votre entrÃ©e est invalide\n";
+			cout << "Merci d'entrÃ©e une entier compris entre 0 et 9\n";
 			break;
 		}
 	}

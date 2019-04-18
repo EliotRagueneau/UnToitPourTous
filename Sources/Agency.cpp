@@ -107,7 +107,9 @@ void Agency::deal() {
 }
 
 void Agency::visit() {
-
+	std::shared_ptr<Buyer> buyerRef = Agency::findBuyer();
+	std::shared_ptr<Good> goodRef = Agency::findGood();
+	buyerRef->visit(goodRef);
 }
 
 void Agency::save() {
@@ -482,6 +484,7 @@ std::list<std::shared_ptr<Good>> Agency::filterType(std::list<std::shared_ptr<Go
 
     return filteredGoodsList;
 }
+
 
 std::list<std::shared_ptr<Good>> Agency::getGoods() const {
     return list<shared_ptr<Good>>(goods);
