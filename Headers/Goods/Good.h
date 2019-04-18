@@ -51,6 +51,9 @@ public:
 	void showProposals();
 
 	void printID() const;
+
+	void setSold();
+
 };
 
 

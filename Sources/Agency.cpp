@@ -90,7 +90,9 @@ void Agency::show() const {
 }
 
 void Agency::addBuyer() {
-
+	shared_ptr<Buyer> ptrNewBuyer;
+	ptrNewBuyer = shared_ptr<Buyer>(new Buyer());
+	buyers[ptrNewBuyer->getName()] = ptrNewBuyer;
 }
 
 void Agency::search() {

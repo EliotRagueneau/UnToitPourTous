@@ -105,3 +105,6 @@ void Good::printID() const {
     cout << "Bien n°" << id << endl;
 }
 
+void Good::setSold() {
+	sold = true;
+}
