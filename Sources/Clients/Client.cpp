@@ -28,4 +28,9 @@ void Client::save(std::ofstream &file) const {
     file << address << endl;
 }
 
+std::string Client::getAddress()
+{
+	return address;
+}
+
 

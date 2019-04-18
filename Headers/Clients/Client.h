@@ -22,6 +22,8 @@ public:
 
     virtual void save(std::ofstream& file) const;
 
+	std::string getAddress();
+
 };
 
 

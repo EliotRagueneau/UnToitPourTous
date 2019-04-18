@@ -53,6 +53,8 @@ public:
 
     void load();
 
+	void sell();
+
     void addProposal();
 
     static std::list<std::shared_ptr<Good>>
@@ -72,6 +74,7 @@ public:
 
 	std::shared_ptr<Seller> getSellerRef(const std::string &sellerName);
 
+	shared_ptr<Seller> addSellerFromBuyer(const shared_ptr<Buyer> &seller);
 };
 
 

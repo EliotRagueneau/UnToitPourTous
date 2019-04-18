@@ -56,7 +56,7 @@ public:
 
 	virtual std::string getType() const = 0;
 
-	void setSold();
+	void setSold(bool status);
 
 };
 

@@ -83,6 +83,11 @@ shared_ptr<Seller> Agency::getSellerRef(const std::string &sellerName) {
     return sellers.find(sellerName)->second;
 }
 
+shared_ptr<Seller> Agency::addSellerFromBuyer(const shared_ptr<Buyer> &seller){
+	shared_ptr<Seller> sellerRef = shared_ptr<Seller>(new Seller(seller->getName(), seller->getAddress());
+	return sellerRef;
+}
+
 void Agency::show() const {
     for (const auto &good : goods) {
         if (!good->isSold()) {
@@ -288,6 +293,17 @@ void Agency::load() {
         }
         sellerFile.close();
     }
+}
+
+void Agency::sell(){
+	shared_ptr<Buyer> buyerRef = Agency::findBuyer();
+	shared_ptr<Good> goodRef = Agency::findGood();
+	shared_ptr<Seller> sellerRef = Agency::findSeller();
+	goodRef->setSold(true);
+	shared_ptr<Seller> newSellerRef = Agency::addSellerFromBuyer(buyerRef);
+
+
+
 }
 
 

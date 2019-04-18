@@ -111,6 +111,7 @@ bool Good::isSold() const {
 
 
 
-void Good::setSold() {
-	sold = true;
+void Good::setSold(bool status) {
+	sold = status;
+	price = 0;
 }
