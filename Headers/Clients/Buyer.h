@@ -7,6 +7,7 @@
 
 
 #include "Client.h"
+#include "Seller.h"
 #include <list>
 #include <memory>
 
@@ -26,6 +27,8 @@ public:
     void save(std::ofstream& file) const;
 
     void visit(const std::shared_ptr<Good> &bien);
+
+    std::shared_ptr<Seller> toSeller();
 };
 
 #endif //UNTOITPOURTOUS_BUYERS_H

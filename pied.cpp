@@ -45,10 +45,7 @@ int main() {
         cout << "\t------------------------\n";
         cout << "\t-0. Quitter le programme\n";
 
-        int input;
-        cin >> input;
-        cin.ignore();
-        switch (input) {
+        switch (Utils::getInt()) {
             case 1: //Ajouter un bien
                 unToitPourTous.addGood();
                 break;
@@ -73,9 +70,6 @@ int main() {
             case 8: // Faire une vente via adresse
                 unToitPourTous.sell();
                 break;
-
-
-
             case 9: // Afficher les biens
                 unToitPourTous.show();
                 break;

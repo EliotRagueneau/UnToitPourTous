@@ -22,15 +22,71 @@ private:
     std::map<std::string, std::shared_ptr<Seller>> sellers;
     std::map<std::string, std::shared_ptr<Buyer>> buyers;
 
-    static std::shared_ptr<Good> getGoodByID(const std::list<std::shared_ptr<Good>> &goodsList);
+public:
 
+    Agency();
 
-    std::shared_ptr<Seller> getSellerRef(const std::string &sellerName);
+    virtual ~Agency();
+
+    std::shared_ptr<Good> addGood();
+
+    std::shared_ptr<Seller> getSellerRef();
+
+    std::shared_ptr<Buyer> addBuyer();
+
+    void reSell();
+
+    void search();
+
+    void visit();
+
+    void addProposal();
+
+    void sell();
+
+    void show() const;
+
+    void showBuyers() const;
+
+    void showSellers() const;
+
+    void save();
+
+    void load();
+
+private:  // Private Methods
+    void reSell(const std::list<std::shared_ptr<Good>>& soldGoods);
 
     static void show(const std::list<std::shared_ptr<Good>> &goodsList);
 
+    void search(const std::list<std::shared_ptr<Good>> &goodsList);
+
+    void visit(const std::shared_ptr<Good>& goodRef);
+
+    void addProposal(const std::shared_ptr<Good>& goodRef);
+
+    void sell(const std::shared_ptr<Good> &);
+
+    std::list<std::shared_ptr<Good>> getGoods() const;
+
+    static std::shared_ptr<Good> getGoodByID(const std::list<std::shared_ptr<Good>> &goodsList);
+
+    std::shared_ptr<Good> getGoodByAddress();
+
     std::shared_ptr<Good>
     getGood(double price, double area, const std::string &address, const std::string &sellerName);
+
+    std::shared_ptr<Seller> getSellerByName(const std::string &sellerName);
+
+    std::shared_ptr<Buyer> getBuyerByName();
+
+    // Filters
+
+    static std::list<std::shared_ptr<Good>>
+    filterSold(std::list<std::shared_ptr<Good>> goodsList);
+
+    static std::list<std::shared_ptr<Good>>
+    filterToSell(std::list<std::shared_ptr<Good>> goodsList);
 
     static std::list<std::shared_ptr<Good>>
     filterGreaterPrice(double priceThreshold, std::list<std::shared_ptr<Good>> goodsList);
@@ -46,51 +102,6 @@ private:
 
     static std::list<std::shared_ptr<Good>> filterType(std::list<std::shared_ptr<Good>> goodsList);
 
-    void search(const std::list<std::shared_ptr<Good>> &goodsList);
-
-    void sell(const std::shared_ptr<Good> &);
-
-    std::list<std::shared_ptr<Good>> getGoods() const;
-
-    std::shared_ptr<Good> findGood();
-
-    std::shared_ptr<Buyer> findBuyer();
-
-    std::shared_ptr<Seller> findSeller();
-
-    std::shared_ptr<Seller> addSellerFromBuyer(const std::shared_ptr<Buyer> &seller);
-
-public:
-
-    Agency();
-
-    std::shared_ptr<Good> addGood();
-
-    std::shared_ptr<Buyer> addBuyer();
-
-    std::shared_ptr<Seller> getSellerRef();
-
-    void show() const;
-
-    void showBuyers() const;
-
-    void showSellers() const;
-
-    void search();
-
-    void visit();
-
-    void save();
-
-    void load();
-
-    void sell();
-
-    void addProposal();
-
-    void reSell();
-
-    virtual ~Agency();
 };
 
 

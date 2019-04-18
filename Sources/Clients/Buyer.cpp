@@ -31,3 +31,7 @@ void Buyer::visit(const shared_ptr<Good> &visitedGood) {
 
 
 Buyer::Buyer() : Client() {}
+
+shared_ptr<Seller> Buyer::toSeller() {
+    return make_shared<Seller>(name, address);
+}

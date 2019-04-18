@@ -2,9 +2,8 @@
 // Created by eliot on 25/02/19.
 //
 
-#include <iostream>
 #include "../Headers/Utils.h"
-#include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -46,14 +45,20 @@ int Utils::selectType() {
     cout << "\t-2. Un appartement\n";
     cout << "\t-3. Un terrain\n";
     cout << "\t-4. Un local professionnel\n";
-
-    int goodKind;
-    cin >> goodKind;
-    cin.ignore();
-
-    return goodKind;
+    return getInt();
 }
 
 
+double Utils::getDouble() {
+    double value;
+    cin >> value;
+    cin.ignore();
+    return value;
+}
 
-
+int Utils::getInt() {
+    int value;
+    cin >> value;
+    cin.ignore();
+    return value;
+}

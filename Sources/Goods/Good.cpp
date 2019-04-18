@@ -142,3 +142,5 @@ const map<weak_ptr<Buyer>, double, owner_less<weak_ptr<Buyer>>> &Good::getPropos
     return proposalsMap;
 }
 
+
+
