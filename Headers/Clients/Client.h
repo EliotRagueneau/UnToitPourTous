@@ -18,6 +18,8 @@ public:
 
     std::string getName() const;
 
+    void show() const;
+
     Client();
 
     virtual void save(std::ofstream& file) const;

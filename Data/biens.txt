@@ -1,14 +1,10 @@
 Terrain
-20000
+0
 50
 15 rue Beaufleury
 Eliot Ragueneau
-0
+1
 <Propositions>
-Jérémy Bulle
-3000
-Marie Beurton-Aimar
-40000
 </Propositions>
 0
 

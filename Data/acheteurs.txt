@@ -2,7 +2,7 @@ Jérémy Bulle
 1 rue des Rêves
 <VisitedGoods>
 15 rue Beaufleury
-20000
+0
 50
 Eliot Ragueneau
 </VisitedGoods>

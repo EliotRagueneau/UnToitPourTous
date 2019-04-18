@@ -62,7 +62,9 @@ public:
 
 	void cleanProposals();
 
-	void setSellerRef(const std::shared_ptr<Seller> &seller);
+    const std::map<std::weak_ptr<Buyer>, double, std::owner_less<std::weak_ptr<Buyer>>> &getProposalsMap() const;
+
+    void setSellerRef(const std::shared_ptr<Seller> &seller);
 
 	void setPrice(const double &prix);
 };

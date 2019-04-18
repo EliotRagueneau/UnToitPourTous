@@ -33,4 +33,9 @@ std::string Client::getAddress()
 	return address;
 }
 
+void Client::show() const {
+    cout << name << endl;
+    cout << address << endl;
+}
+
 

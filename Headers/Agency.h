@@ -48,23 +48,33 @@ private:
 
     void search(const std::list<std::shared_ptr<Good>> &goodsList);
 
-public:
-
-    Agency();
+    void sell(const std::shared_ptr<Good> &);
 
     std::list<std::shared_ptr<Good>> getGoods() const;
+
+    std::shared_ptr<Good> findGood();
 
     std::shared_ptr<Buyer> findBuyer();
 
     std::shared_ptr<Seller> findSeller();
 
-    std::shared_ptr<Good> findGood();
+    std::shared_ptr<Seller> addSellerFromBuyer(const std::shared_ptr<Buyer> &seller);
+
+public:
+
+    Agency();
 
     std::shared_ptr<Good> addGood();
 
+    std::shared_ptr<Buyer> addBuyer();
+
+    std::shared_ptr<Seller> getSellerRef();
+
     void show() const;
 
-    std::shared_ptr<Buyer> addBuyer();
+    void showBuyers() const;
+
+    void showSellers() const;
 
     void search();
 
@@ -74,17 +84,13 @@ public:
 
     void load();
 
-	void sell();
+    void sell();
 
     void addProposal();
 
-	std::shared_ptr<Seller> getSellerRef();
-
-	std::shared_ptr<Seller> addSellerFromBuyer(const std::shared_ptr<Buyer> &seller);
+    void reSell();
 
     virtual ~Agency();
-
-	void reSell();
 };
 
 

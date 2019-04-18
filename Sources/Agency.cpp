@@ -13,6 +13,7 @@
 #include <limits>
 #include <fstream>
 #include <algorithm>
+#include <vector>
 #include "../Headers/Agency.h"
 #include "../Headers/Goods/Good.h"
 #include "../Headers/Goods/House.h"
@@ -80,18 +81,18 @@ shared_ptr<Seller> Agency::getSellerRef(const std::string &sellerName) {
     return sellers.find(sellerName)->second;
 }
 
-shared_ptr<Seller> Agency::addSellerFromBuyer(const shared_ptr<Buyer> &seller){
-	shared_ptr<Seller> sellerRef = make_shared<Seller>(seller->getName(), seller->getAddress());
-	return sellerRef;
+shared_ptr<Seller> Agency::addSellerFromBuyer(const shared_ptr<Buyer> &seller) {
+    shared_ptr<Seller> sellerRef = make_shared<Seller>(seller->getName(), seller->getAddress());
+    return sellerRef;
 }
 
-void Agency::reSell(){
-	shared_ptr<Good> ptrGood = Agency::findGood();
-	ptrGood->setSold(false);
-	cout << "Quelle est le prix de mise en vente?\n";
-	double prix;
-	cin >> prix;
-	ptrGood->setPrice(prix);
+void Agency::reSell() {
+    shared_ptr<Good> ptrGood = Agency::findGood();
+    ptrGood->setSold(false);
+    cout << "Quelle est le prix de mise en vente?\n";
+    double prix;
+    cin >> prix;
+    ptrGood->setPrice(prix);
 }
 
 void Agency::show() const {
@@ -132,6 +133,7 @@ void Agency::search(const std::list<std::shared_ptr<Good>> &goodsList) {
     cout << "\t-1. Affiner la recherche" << endl;
     cout << "\t-2. Visiter un bien" << endl;
     cout << "\t-3. Faire une proposition de vente" << endl;
+    cout << "\t-4. Accepter une proposition de vente" << endl;
     cout << "\t-0. Quitter la recherche" << endl;
 
     int option;
@@ -211,7 +213,10 @@ void Agency::search(const std::list<std::shared_ptr<Good>> &goodsList) {
                 good->addProposal(buyer, amount);
             }
             break;
-
+        case 4:
+            good = getGoodByID(goodsList);
+            sell(good);
+            break;
         case 0:
             break;
         default:
@@ -229,9 +234,9 @@ void Agency::search(const std::list<std::shared_ptr<Good>> &goodsList) {
 
 
 void Agency::visit() {
-	std::shared_ptr<Buyer> buyerRef = findBuyer();
-	std::shared_ptr<Good> goodRef = findGood();
-	buyerRef->visit(goodRef);
+    std::shared_ptr<Buyer> buyerRef = findBuyer();
+    std::shared_ptr<Good> goodRef = findGood();
+    buyerRef->visit(goodRef);
 }
 
 void Agency::save() {
@@ -281,7 +286,6 @@ void Agency::load() {
         while (getline(sellerFile, name)) {
             getline(sellerFile, address);
             sellers[name] = make_shared<Seller>(name, address);
-            sellerFile.ignore();
         }
         sellerFile.close();
     }
@@ -294,7 +298,7 @@ void Agency::load() {
                 getline(buyerFile, buffer);
             }
             buyers[name] = make_shared<Buyer>(name, address);
-            buyerFile.ignore();
+            getline(buyerFile, buffer);
         }
         buyerFile.close();
     }
@@ -410,23 +414,54 @@ void Agency::load() {
                 buyers[name]->visit(getGood(goodPrice, goodArea, goodAddress, goodSellerName));
                 getline(buyerFile, buffer);
             }
-            buyerFile.ignore();
+            getline(buyerFile, buffer);
         }
         buyerFile.close();
     }
 }
 
-void Agency::sell(){
-	shared_ptr<Buyer> buyerRef = Agency::findBuyer();
-	shared_ptr<Good> goodRef = Agency::findGood();
-	shared_ptr<Seller> sellerRef = Agency::findSeller();
-	goodRef->setSold(true);
-	shared_ptr<Seller> newSellerRef = Agency::addSellerFromBuyer(buyerRef);
+void Agency::sell(const std::shared_ptr<Good> &good) {
+    good->show();
+    bool goodSelled = false;
+    while (!goodSelled) {
+        cout << "Les propositions pour ce bien sont :" << endl;
+        auto proposals = good->getProposalsMap();
+        int counter = 1;
 
+        vector<shared_ptr<Buyer>> proposers;
+        for (const auto &pair: proposals) {
+            auto sharedData = pair.first.lock();
+            if (sharedData) {
+                cout << "\t-" << counter << " : " << sharedData->getName() << " : " << pair.second << " €" << endl;
+                proposers.push_back(sharedData);
+                counter ++;
+            }
+        }
+        cout << "Laquelle voulez vous accepter ?" << endl;
+        int choice;
+        cin >> choice;
 
-
+        if (choice != 0 && choice <= counter) {
+            auto buyerRef = proposers[choice - 1];
+            good->setSold(true);
+            good->cleanProposals();
+            sellers[good->getSellerName()]->delGood(good);
+            shared_ptr<Seller> newSellerRef = Agency::addSellerFromBuyer(buyerRef);
+            goodSelled = true;
+        } else {
+            cout << "La proposition n°" << choice << " n'éxiste pas." << endl;
+            cout << "Voulez vous stopper la transaction ?" << endl;
+            if (Utils::yesOrNo()) {
+                return;
+            }
+        }
+    }
 }
 
+
+void Agency::sell() {
+    sell(Agency::findGood());
+}
 
 shared_ptr<Buyer> Agency::findBuyer() {
 // Vérification si l'acheteur existe, récupération de l adresse de l'objet ou proposition de création de l'objet buyer
@@ -578,6 +613,7 @@ Agency::filterLowerArea(double areaThreshold, std::list<std::shared_ptr<Good>> g
     return filteredGoodsList;
 }
 
+
 std::list<std::shared_ptr<Good>> Agency::filterType(std::list<std::shared_ptr<Good>> goodsList) {
 
     int goodKind = Utils::selectType();
@@ -615,7 +651,6 @@ std::list<std::shared_ptr<Good>> Agency::filterType(std::list<std::shared_ptr<Go
     return filteredGoodsList;
 }
 
-
 std::list<std::shared_ptr<Good>> Agency::getGoods() const {
     return list<shared_ptr<Good>>(goods);
 }
@@ -644,4 +679,20 @@ Agency::~Agency() {
     goods.clear();
     buyers.clear();
     sellers.clear();
+}
+
+void Agency::showBuyers() const {
+    cout << "Les acheteurs potentiels sont :" << endl;
+    for (const auto& buyerPair : buyers) {
+        buyerPair.second->show();
+        cout << "- - - - - - - - - - - - - " << endl;
+    }
+}
+
+void Agency::showSellers() const {
+    cout << "Les vendeurs sont :" << endl;
+    for (const auto& sellerPair : sellers) {
+        sellerPair.second->show();
+        cout << "- - - - - - - - - - - - - " << endl;
+    }
 }

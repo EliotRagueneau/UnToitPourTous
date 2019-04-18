@@ -138,3 +138,7 @@ void Good::setPrice(const double &prix){
 	price = prix;
 }
 
+const map<weak_ptr<Buyer>, double, owner_less<weak_ptr<Buyer>>> &Good::getProposalsMap() const {
+    return proposalsMap;
+}
+
