@@ -15,10 +15,12 @@ Buyer::~Buyer() {
 
 void Buyer::save(std::ofstream &file) const {
     Client::save(file);
-
     file << "<VisitedGoods>" << endl;
-    for (const auto &visitedGoodsPtr: visitList) {
-        visitedGoodsPtr->simpleSave(file);
+    for (const auto &visitedGoodPtr: visitList) {
+        auto sharedData = visitedGoodPtr.lock();
+        if (sharedData) {
+            sharedData->simpleSave(file);
+        }
     }
     file << "</VisitedGoods>" << endl;
 }

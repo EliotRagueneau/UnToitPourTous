@@ -1,21 +1,14 @@
 Terrain
 20000
-100
-2 rue des champs
-Giscard
+50
+15 rue Beaufleury
+Eliot Ragueneau
 0
 <Propositions>
+Jérémy Bulle
+3000
+Marie Beurton-Aimar
+40000
 </Propositions>
-1
-
-Local
-200000
-20
-3 rue des champs
-Giscard
 0
-<Propositions>
-</Propositions>
-5
-1
 

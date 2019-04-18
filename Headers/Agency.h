@@ -22,7 +22,7 @@ private:
     std::map<std::string, std::shared_ptr<Seller>> sellers;
     std::map<std::string, std::shared_ptr<Buyer>> buyers;
 
-    std::shared_ptr<Good> getGoodByID(const std::list<std::shared_ptr<Good>> &goodsList);
+    static std::shared_ptr<Good> getGoodByID(const std::list<std::shared_ptr<Good>> &goodsList);
 
 
     std::shared_ptr<Seller> getSellerRef(const std::string &sellerName);
@@ -64,7 +64,6 @@ public:
 
     void show() const;
 
-
     std::shared_ptr<Buyer> addBuyer();
 
     void search();
@@ -82,6 +81,8 @@ public:
 	std::shared_ptr<Seller> getSellerRef();
 
 	std::shared_ptr<Seller> addSellerFromBuyer(const std::shared_ptr<Buyer> &seller);
+
+    virtual ~Agency();
 
 	void reSell();
 };

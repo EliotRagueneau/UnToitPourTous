@@ -31,10 +31,10 @@ void House::show() const {
 
     Residential::show();
     if (garden) {
-        cout << "\t-L'appartement possède un balcon\n";
+        cout << "\t-La maison possède un jardin\n";
     }
     if (swimmingPool) {
-        cout << "\t-L'appartement possède une cave\n";
+        cout << "\t-La maison possède une piscine\n";
     }
 }
 

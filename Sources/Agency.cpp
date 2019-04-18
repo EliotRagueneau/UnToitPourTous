@@ -260,7 +260,7 @@ void Agency::save() {
     buyersFile.open("../Data/acheteurs.txt");
     if (buyersFile.is_open()) {
         for (const auto &buyer : buyers) {
-            buyer.second->save(sellersFile);
+            buyer.second->save(buyersFile);
             buyersFile << endl;
         }
         buyersFile.close();
@@ -288,15 +288,15 @@ void Agency::load() {
 
     ifstream buyerFile("../Data/acheteurs.txt");
     if (buyerFile.is_open()) {
-        while (getline(sellerFile, name)) {
-            getline(sellerFile, address);
+        while (getline(buyerFile, name)) {
+            getline(buyerFile, address);
             while (buffer != "</VisitedGoods>") {
                 getline(buyerFile, buffer);
             }
             buyers[name] = make_shared<Buyer>(name, address);
-            sellerFile.ignore();
+            buyerFile.ignore();
         }
-        sellerFile.close();
+        buyerFile.close();
     }
 
 
@@ -396,23 +396,23 @@ void Agency::load() {
 
     buyerFile.open("../Data/acheteurs.txt");
     if (buyerFile.is_open()) {
-        while (getline(sellerFile, name)) {
-            getline(sellerFile, address);
+        while (getline(buyerFile, name)) {
+            getline(buyerFile, address);
 
-            getline(goodsFile, buffer);
-            getline(goodsFile, buffer);
+            getline(buyerFile, buffer);
+            getline(buyerFile, buffer);
             while (buffer != "</VisitedGoods>") {
                 goodAddress = buffer;
-                goodsFile >> goodPrice;
-                goodsFile >> goodArea;
-                goodsFile.ignore();
-                getline(goodsFile, goodSellerName);
+                buyerFile >> goodPrice;
+                buyerFile >> goodArea;
+                buyerFile.ignore();
+                getline(buyerFile, goodSellerName);
                 buyers[name]->visit(getGood(goodPrice, goodArea, goodAddress, goodSellerName));
-                getline(goodsFile, buffer);
+                getline(buyerFile, buffer);
             }
-            sellerFile.ignore();
+            buyerFile.ignore();
         }
-        sellerFile.close();
+        buyerFile.close();
     }
 }
 
@@ -458,7 +458,7 @@ Agency::getGood(double price, double area, const std::string &address, const std
         if (goodPtr->getPrice() == price
             && goodPtr->getArea() == area
             && goodPtr->getAddress() == address
-            && goodPtr->getSeller()->getName() == sellerName) {
+            && goodPtr->getSellerName() == sellerName) {
             return goodPtr;
         }
     }
@@ -637,4 +637,11 @@ std::shared_ptr<Good> Agency::getGoodByID(const std::list<std::shared_ptr<Good>>
 
     cout << "Le numéro que vous avez fournis n'est pas disponible dans la liste que nous vous avons présenter." << endl;
     return getGoodByID(goodsList);
+}
+
+Agency::~Agency() {
+    save();
+    goods.clear();
+    buyers.clear();
+    sellers.clear();
 }

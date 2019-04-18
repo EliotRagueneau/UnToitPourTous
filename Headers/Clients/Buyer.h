@@ -15,7 +15,7 @@ class Good;
 
 class Buyer : public Client {
 private:
-    std::list<std::shared_ptr<Good>> visitList;
+    std::list<std::weak_ptr<Good>> visitList;
 public:
     virtual ~Buyer();
 

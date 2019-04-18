@@ -1,6 +1,5 @@
 #include <utility>
 
-#include <utility>
 
 //
 // Created by eliot on 25/02/19.
@@ -24,7 +23,7 @@ Good::Good(const Good &src) : price(src.price),
     id = ++nbInstance;
 }
 
-Good::Good(shared_ptr<Seller> sellerRef) : sellerRef(std::move(sellerRef)) {
+Good::Good(const shared_ptr<Seller> &sellerRef) : sellerRef(sellerRef) {
     cout << "Quelle est l'adresse du bien ?\n";
     getline(cin, address);
     cout << "Quelle est le prix du bien (€)?\n";
@@ -35,14 +34,17 @@ Good::Good(shared_ptr<Seller> sellerRef) : sellerRef(std::move(sellerRef)) {
     id = ++nbInstance;
 }
 
-Good::Good(double price, std::string address, double area, shared_ptr<Seller> sellerRef, bool sold)
+Good::Good(double price, std::string address, double area, const shared_ptr<Seller> &sellerRef, bool sold)
         : price(price), address(std::move(address)),
-          area(area), sellerRef(std::move(sellerRef)), sold(sold) {
+          area(area), sellerRef(sellerRef), sold(sold) {
     id = ++nbInstance;
 }
 
-shared_ptr<Seller> Good::getSeller() const {
-    return sellerRef;
+string Good::getSellerName() const {
+    shared_ptr<Seller> sharedData = sellerRef.lock();
+    if (sharedData) {
+        return sharedData->getName();
+    }
 }
 
 string Good::getAddress() const {
@@ -54,19 +56,22 @@ void Good::show() const {
          "\t-Prix : " << price << "€\n" <<
          "\t-Surface : " << area << "m²\n" <<
          "\t-Adresse : " << address << "\n" <<
-         "\t-Nom du vendeur : " << sellerRef->getName() << "\n";
+         "\t-Nom du vendeur : " << getSellerName() << "\n";
 }
 
 void Good::save(ofstream &file) const {
     file << price << endl;
     file << area << endl;
     file << address << endl;
-    file << sellerRef->getName() << endl;
+    file << getSellerName() << endl;
     file << sold << endl;
     file << "<Propositions>" << endl;
-    for (const auto& pair : proposalsMap) {
-        file << pair.first->getName() << endl;
-        file << pair.second << endl;
+    for (const auto &pair : proposalsMap) {
+        auto shared_data = pair.first.lock();
+        if (shared_data) {
+            file << shared_data->getName() << endl;
+            file << pair.second << endl;
+        }
     }
     file << "</Propositions>" << endl;
 }
@@ -75,18 +80,20 @@ void Good::simpleSave(std::ofstream &file) const {
     file << address << endl;
     file << price << endl;
     file << area << endl;
-    file << sellerRef->getName() << endl;
+    file << getSellerName() << endl;
 }
 
 Good::~Good() {
     proposalsMap.clear();
 }
 
-void Good::showProposals()
-{
-	for (auto & it : proposalsMap) {
-		cout << (it.first)->getName() << " Propose " << it.second << "€\n";
-	}
+void Good::showProposals() {
+    for (auto &it : proposalsMap) {
+        auto shared_data = it.first.lock();
+        if (shared_data) {
+            cout << shared_data->getName() << " Propose " << it.second << "€\n";
+        }
+    }
 }
 
 double Good::getPrice() const {
@@ -98,7 +105,7 @@ double Good::getArea() const {
 }
 
 void Good::addProposal(const shared_ptr<Buyer> &ptrBuyer, double amount) {
-	proposalsMap[ptrBuyer] = amount;
+    proposalsMap[ptrBuyer] = amount;
 }
 
 void Good::printID() const {
@@ -110,10 +117,9 @@ bool Good::isSold() const {
 }
 
 
-
 void Good::setSold(bool status) {
-	sold = status;
-	price = 0;
+    sold = status;
+    price = 0;
 }
 
 int Good::getId() const {
