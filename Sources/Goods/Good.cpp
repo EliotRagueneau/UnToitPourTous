@@ -119,3 +119,11 @@ void Good::setSold(bool status) {
 int Good::getId() const {
     return id;
 }
+
+void Good::cleanProposals() {
+	proposalsMap.clear();
+}
+
+void Good::setSellerRef(const std::shared_ptr<Seller>& seller) {
+	sellerRef = seller;
+}

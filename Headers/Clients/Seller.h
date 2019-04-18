@@ -24,6 +24,8 @@ public:
     Seller();
 
     virtual ~Seller();
+
+	void delGood(const std::shared_ptr<Good>& good);
 };
 
 

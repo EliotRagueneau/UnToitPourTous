@@ -17,3 +17,7 @@ void Seller::addGood(const shared_ptr<Good> &good) {
 Seller::~Seller() {
     sellingGoodsList.clear();
 }
+
+void Seller::delGood(const std::shared_ptr<Good>& good) {
+	sellingGoodsList.remove(good);
+}

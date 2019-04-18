@@ -60,6 +60,10 @@ public:
 
     int getId() const;
 
+	void cleanProposals();
+
+	void setSellerRef(const std::shared_ptr<Seller> &seller);
+
 };
 
 
