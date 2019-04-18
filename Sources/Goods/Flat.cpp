@@ -1,3 +1,7 @@
+#include <utility>
+
+#include <utility>
+
 //
 // Created by eliot on 25/02/19.
 //
@@ -12,12 +16,12 @@ using namespace std;
 
 Flat::Flat(double price, const std::string &address, double area, shared_ptr<Seller> sellerRef, bool sold, int nbRooms,
            bool garage, int floor, bool cave, bool balcony, int nbBuildingFlats) : Residential(price, address, area,
-                                                                                               sellerRef, sold, nbRooms,
+                                                                                               move(sellerRef), sold, nbRooms,
                                                                                                garage), floor(floor),
                                                                                    cave(cave), balcony(balcony),
                                                                                    nbBuildingFlats(nbBuildingFlats) {}
 
-Flat::Flat(shared_ptr<Seller> sellerRef) : Residential(sellerRef) {
+Flat::Flat(shared_ptr<Seller> sellerRef) : Residential(move(sellerRef)) {
     cout << "A quel étage se trouve l'appartement ?\n";
     cin >> floor;
     cout << "L'apparatement possède t'il un balcon ?\n";
@@ -52,4 +56,8 @@ void Flat::save(std::ofstream &file) const {
     file << cave << endl;
     file << nbBuildingFlats << endl;
 
+}
+
+std::string Flat::getType() const {
+    return "Appartement";
 }

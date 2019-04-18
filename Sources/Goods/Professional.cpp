@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by eliot on 25/02/19.
 //
@@ -13,10 +15,10 @@ using namespace std;
 Professional::Professional(double price, const std::string &address, double area, shared_ptr<Seller> sellerRef,
                            bool sold,
                            double showcaseSize, bool storeRoom)
-        : Good(price, address, area, sellerRef, sold), showcaseSize(showcaseSize),
+        : Good(price, address, area, std::move(sellerRef), sold), showcaseSize(showcaseSize),
                                              storeRoom(storeRoom) {}
 
-Professional::Professional(shared_ptr<Seller> sellerRef) : Good(sellerRef) {
+Professional::Professional(shared_ptr<Seller> sellerRef) : Good(std::move(sellerRef)) {
     cout << "Quelle est la surface de la vitrine ?\n";
     cin >> showcaseSize;
     cout << "Le local professionnel possède-t'il une pièce de stockage ?\n";
@@ -38,4 +40,8 @@ void Professional::save(ofstream &file) const {
     Good::save(file);
     file << showcaseSize << endl;
     file << storeRoom << endl;
+}
+
+string Professional::getType() const {
+    return "Local";
 }

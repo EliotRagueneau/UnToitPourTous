@@ -24,6 +24,7 @@ public:
     virtual void show() const;
 
     virtual void save(std::ofstream &file) const;
+
 };
 
 

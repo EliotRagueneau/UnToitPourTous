@@ -19,7 +19,7 @@ Client::Client() {
     getline(cin, address);
 }
 
-string &Client::getName() {
+string Client::getName() const {
     return name;
 }
 

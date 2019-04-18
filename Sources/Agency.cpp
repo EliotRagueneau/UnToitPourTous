@@ -8,6 +8,7 @@
 #include <memory>
 #include <limits>
 #include <fstream>
+#include <algorithm>
 #include "../Headers/Agency.h"
 #include "../Headers/Goods/Good.h"
 #include "../Headers/Goods/House.h"
@@ -55,7 +56,7 @@ void Agency::addGood() {
         default:
             cout << "Mauvaise entrée\n";
             addGood();
-            break;
+            return;
     }
     goods.push_back(toAdd);
     sellers[sellerName]->addGood(toAdd);
@@ -84,8 +85,10 @@ shared_ptr<Seller> Agency::getSellerRef(const std::string &sellerName) {
 
 void Agency::show() const {
     for (const auto &good : goods) {
-        good->show();
-        cout << "======================\n";
+        if (!good->isSold()) {
+            good->show();
+            cout << "======================\n";
+        }
     }
 }
 
@@ -276,7 +279,7 @@ void Agency::load() {
                 goodsFile >> goodArea;
                 goodsFile.ignore();
                 getline(goodsFile, goodSellerName);
-                buyers[name]->visit(getGood(goodPrice,goodArea, goodAddress, goodSellerName));
+                buyers[name]->visit(getGood(goodPrice, goodArea, goodAddress, goodSellerName));
                 getline(goodsFile, buffer);
             }
             sellerFile.ignore();
@@ -300,7 +303,7 @@ shared_ptr<Buyer> Agency::findBuyer() {
             shared_ptr<Buyer> ptrNewBuyer;
             ptrNewBuyer = shared_ptr<Buyer>(new Buyer());
             buyers[ptrNewBuyer->getName()] = ptrNewBuyer;
-			return ptrNewBuyer;
+            return ptrNewBuyer;
         } else {
             return nullptr;
         }
@@ -322,8 +325,11 @@ Agency::getGood(double price, double area, const std::string &address, const std
     return nullptr;
 }
 
+/**
+ * Vérification si le vendeur existe, récupération de l adresse de l'objet ou proposition de création de l'objet seller
+ * @return
+ */
 shared_ptr<Seller> Agency::findSeller() {
-    // Vérification si le vendeur existe, récupération de l adresse de l'objet ou proposition de création de l'objet seller
     cout << "Quel est le nom de l'acheteur?\n";
     string nomVendeur;
     auto trouve = sellers.find(nomVendeur);
@@ -337,7 +343,11 @@ shared_ptr<Seller> Agency::findSeller() {
 
 }
 
-shared_ptr<Good> Agency::findGood() { //recherche d'un bien via son adresse
+/**
+ * Recherche d'un bien via son adresse
+ * @return
+ */
+shared_ptr<Good> Agency::findGood() {
     cout << "Quelle est l'adresse du bien?\n";
     string adresse;
     getline(cin, adresse);
@@ -378,13 +388,13 @@ void Agency::addProposal() {
             cout << "Souhaitez-vous rechercher un Acheteur?\n";
             if (Utils::yesOrNo()) {
                 ptrAcheteur = Agency::findBuyer();
-				cout << "Quel est le prix proposé par l'acheteur?\n";
-				double prix;
-				cin >> prix;
-				cin.ignore();
-				ptrBien->addProposal(ptrAcheteur, prix);
-				cout << "Proposition enregistée\n"; // ajouter une methode show pour les propositions
-				ptrBien->showProposals();
+                cout << "Quel est le prix proposé par l'acheteur?\n";
+                double prix;
+                cin >> prix;
+                cin.ignore();
+                ptrBien->addProposal(ptrAcheteur, prix);
+                cout << "Proposition enregistée\n"; // ajouter une methode show pour les propositions
+                ptrBien->showProposals();
             } else {
                 cout << "Vous n'avez pas sélectionné de bien\n";
                 break;
@@ -393,3 +403,86 @@ void Agency::addProposal() {
     }
 }
 
+std::list<std::shared_ptr<Good>>
+Agency::filterGreaterPrice(double priceThreshold, std::list<std::shared_ptr<Good>> goodsList) {
+    std::list<std::shared_ptr<Good>> filteredGoodsList;
+    copy_if(goodsList.begin(), goodsList.end(), back_inserter(filteredGoodsList), [priceThreshold](auto val) {
+        return val->getPrice() >= priceThreshold && !val->isSold();
+    });
+    return filteredGoodsList;
+}
+
+std::list<std::shared_ptr<Good>>
+Agency::filterLowerPrice(double priceThreshold, std::list<std::shared_ptr<Good>> goodsList) {
+    std::list<std::shared_ptr<Good>> filteredGoodsList;
+    copy_if(goodsList.begin(), goodsList.end(), back_inserter(filteredGoodsList), [priceThreshold](auto val) {
+        return val->getPrice() <= priceThreshold && !val->isSold();
+    });
+    return filteredGoodsList;
+}
+
+std::list<std::shared_ptr<Good>>
+Agency::filterGreaterArea(double areaThreshold, std::list<std::shared_ptr<Good>> goodsList) {
+    std::list<std::shared_ptr<Good>> filteredGoodsList;
+    copy_if(goodsList.begin(), goodsList.end(), back_inserter(filteredGoodsList), [areaThreshold](auto val) {
+        return val->getArea() >= areaThreshold && !val->isSold();
+    });
+    return filteredGoodsList;
+}
+
+std::list<std::shared_ptr<Good>>
+Agency::filterLowerArea(double areaThreshold, std::list<std::shared_ptr<Good>> goodsList) {
+    std::list<std::shared_ptr<Good>> filteredGoodsList;
+    copy_if(goodsList.begin(), goodsList.end(), back_inserter(filteredGoodsList), [areaThreshold](auto val) {
+        return val->getArea() <= areaThreshold && !val->isSold();
+    });
+    return filteredGoodsList;
+}
+
+std::list<std::shared_ptr<Good>> Agency::filterType(std::list<std::shared_ptr<Good>> goodsList) {
+    cout << "Quel type de bien souhaitez vous filtrer ?\n";
+    cout << "\t-1. Une maison\n";
+    cout << "\t-2. Un appartement\n";
+    cout << "\t-3. Un terrain\n";
+    cout << "\t-4. Un local professionnel\n";
+
+    int goodKind;
+    cin >> goodKind;
+    cin.ignore();
+
+    std::list<std::shared_ptr<Good>> filteredGoodsList;
+
+    switch (goodKind) {
+        case 1:
+            copy_if(goodsList.begin(), goodsList.end(), back_inserter(filteredGoodsList), [](auto val) {
+                return val->getType() == "Maison" && !val->isSold();
+            });
+            break;
+        case 2:
+            copy_if(goodsList.begin(), goodsList.end(), back_inserter(filteredGoodsList), [](auto val) {
+                return val->getType() == "Appartement" && !val->isSold();
+            });
+            break;
+        case 3:
+            copy_if(goodsList.begin(), goodsList.end(), back_inserter(filteredGoodsList), [](auto val) {
+                return val->getType() == "Terrain" && !val->isSold();
+            });
+            break;
+        case 4:
+            copy_if(goodsList.begin(), goodsList.end(), back_inserter(filteredGoodsList), [](auto val) {
+                return val->getType() == "Local" && !val->isSold();
+            });
+            break;
+
+        default:
+            cout << "Mauvaise entrée\n";
+            goodsList = filterType(goodsList);
+            break;
+    }
+
+    return filteredGoodsList;
+}
+
+std::list<std::shared_ptr<Good>> Agency::getGoods() const {
+    return list<shared_ptr<Good>>(goods);
+}

@@ -44,3 +44,7 @@ void House::save(std::ofstream &file) const {
     file << garden << endl;
     file << swimmingPool << endl;
 }
+
+string House::getType() const {
+    return "Maison";
+}

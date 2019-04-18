@@ -16,7 +16,7 @@ protected:
 public:
     Client(std::string name, std::string address);
 
-    std::string &getName();
+    std::string getName() const;
 
     Client();
 

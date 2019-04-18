@@ -84,8 +84,8 @@ Good::~Good() {
 
 void Good::showProposals()
 {
-	for (map<shared_ptr<Buyer>, double>::iterator it = proposalsMap.begin(); it != proposalsMap.end(); it++) {
-		cout << (it->first)->getName() << " Propose " << it->second << "€\n";
+	for (auto & it : proposalsMap) {
+		cout << (it.first)->getName() << " Propose " << it.second << "€\n";
 	}
 }
 
@@ -97,13 +97,19 @@ double Good::getArea() const {
     return area;
 }
 
-void Good::addProposal(const shared_ptr<Buyer> &ptrBuyer, double price) {
-	proposalsMap[ptrBuyer] = price;
+void Good::addProposal(const shared_ptr<Buyer> &ptrBuyer, double amount) {
+	proposalsMap[ptrBuyer] = amount;
 }
 
 void Good::printID() const {
     cout << "Bien n°" << id << endl;
 }
+
+bool Good::isSold() const {
+    return sold;
+}
+
+
 
 void Good::setSold() {
 	sold = true;

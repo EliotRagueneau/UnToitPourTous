@@ -14,5 +14,9 @@ int main() {
 
     unToitPourTous.load();
 
+    for (const auto& goodsPtr: Agency::filterGreaterArea(50, unToitPourTous.getGoods())) {
+        goodsPtr->show();
+    }
+
     unToitPourTous.show();
 }

@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by eliot on 25/02/19.
 //
@@ -14,9 +16,9 @@ using namespace std;
 
 Ground::Ground(double price, const std::string &address, double area, shared_ptr<Seller> sellerRef, bool sold,
                bool buildable)
-        : Good(price, address, area, sellerRef, sold), buildable(buildable) {}
+        : Good(price, address, area, move(sellerRef), sold), buildable(buildable) {}
 
-Ground::Ground(shared_ptr<Seller> sellerRef) : Good(sellerRef) {
+Ground::Ground(shared_ptr<Seller> sellerRef) : Good(move(sellerRef)) {
     cout << "Peut-on construire sur le terrain ?\n";
     buildable = Utils::yesOrNo();
 }
@@ -34,4 +36,8 @@ void Ground::save(ofstream &file) const {
     file << "Terrain\n";
     Good::save(file);
     file << buildable << endl;
+}
+
+string Ground::getType() const {
+    return "Terrain";
 }

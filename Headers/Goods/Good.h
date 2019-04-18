@@ -34,9 +34,11 @@ public:
 
     std::string getAddress() const;
 
+    bool isSold() const;
+
     virtual void show() const;
 
-	void addProposal(const std::shared_ptr<Buyer> &ptrBuyer, double price);
+	void addProposal(const std::shared_ptr<Buyer> &ptrBuyer, double amount);
 
     double getPrice() const;
 
@@ -51,6 +53,8 @@ public:
 	void showProposals();
 
 	void printID() const;
+
+	virtual std::string getType() const = 0;
 
 	void setSold();
 
