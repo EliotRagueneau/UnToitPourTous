@@ -34,5 +34,5 @@ void Utils::menuPrincipal(){
 	cout << "7. Faire une recherche de bien\n";
 	cout << "8. Sauvegarder les biens\n";
 	cout << "9. Charger les biens à partir d'un fichier\n";
-	cout << "10. Quitter le programme\n";
+	cout << "0. Quitter le programme\n";
 }
