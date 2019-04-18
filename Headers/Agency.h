@@ -22,30 +22,52 @@ private:
     std::map<std::string, std::shared_ptr<Seller>> sellers;
     std::map<std::string, std::shared_ptr<Buyer>> buyers;
 
+    std::shared_ptr<Good> getGoodByID(const std::list<std::shared_ptr<Good>> &goodsList);
+
+
+    std::shared_ptr<Seller> getSellerRef(const std::string &sellerName);
+
+    static void show(const std::list<std::shared_ptr<Good>> &goodsList);
+
     std::shared_ptr<Good>
     getGood(double price, double area, const std::string &address, const std::string &sellerName);
 
+    static std::list<std::shared_ptr<Good>>
+    filterGreaterPrice(double priceThreshold, std::list<std::shared_ptr<Good>> goodsList);
 
+    static std::list<std::shared_ptr<Good>>
+    filterLowerPrice(double priceThreshold, std::list<std::shared_ptr<Good>> goodsList);
 
+    static std::list<std::shared_ptr<Good>>
+    filterGreaterArea(double areaThreshold, std::list<std::shared_ptr<Good>> goodsList);
+
+    static std::list<std::shared_ptr<Good>>
+    filterLowerArea(double areaThreshold, std::list<std::shared_ptr<Good>> goodsList);
+
+    static std::list<std::shared_ptr<Good>> filterType(std::list<std::shared_ptr<Good>> goodsList);
+
+    void search(const std::list<std::shared_ptr<Good>> &goodsList);
 
 public:
+
+    Agency();
+
     std::list<std::shared_ptr<Good>> getGoods() const;
 
-	std::shared_ptr<Buyer> findBuyer();
+    std::shared_ptr<Buyer> findBuyer();
 
-	std::shared_ptr<Seller> findSeller();
+    std::shared_ptr<Seller> findSeller();
 
-	std::shared_ptr<Good> findGood();
+    std::shared_ptr<Good> findGood();
 
-    void addGood();
+    std::shared_ptr<Good> addGood();
 
     void show() const;
 
-    void addBuyer();
+
+    std::shared_ptr<Buyer> addBuyer();
 
     void search();
-
-    void deal();
 
     void visit();
 
@@ -57,24 +79,9 @@ public:
 
     void addProposal();
 
-    static std::list<std::shared_ptr<Good>>
-    filterGreaterPrice(double priceThreshold, std::list<std::shared_ptr<Good>> goodsList);
-
-    static std::list<std::shared_ptr<Good>>
-    filterLowerPrice(double priceThreshold, std::list<std::shared_ptr<Good>> goodsList);
-
-    static std::list<std::shared_ptr<Good>>
-    filterGreaterArea(double areaThreshold, std::list<std::shared_ptr<Good>> goodsList);
-
-    static std::list<std::shared_ptr<Good>> filterLowerArea(double areaThreshold, std::list<std::shared_ptr<Good>> goodsList);
-
-    static std::list<std::shared_ptr<Good>> filterType(std::list<std::shared_ptr<Good>> goodsList);
-
 	std::shared_ptr<Seller> getSellerRef();
 
-	std::shared_ptr<Seller> getSellerRef(const std::string &sellerName);
-
-	shared_ptr<Seller> addSellerFromBuyer(const shared_ptr<Buyer> &seller);
+	std::shared_ptr<Seller> addSellerFromBuyer(const std::shared_ptr<Buyer> &seller);
 };
 
 

@@ -8,7 +8,12 @@
 class Utils {
 public:
     static bool yesOrNo();
-	static void menuPrincipal();
+
+    static bool minOrMax();
+
+
+    static int selectType();
+
 
 };
 

@@ -115,3 +115,7 @@ void Good::setSold(bool status) {
 	sold = status;
 	price = 0;
 }
+
+int Good::getId() const {
+    return id;
+}

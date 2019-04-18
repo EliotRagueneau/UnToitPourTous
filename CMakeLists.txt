@@ -19,4 +19,4 @@ add_executable(UnToitPourTous
         Sources/Goods/Residential.cpp
         Sources/Agency.cpp
         Sources/Utils.cpp
-        main.cpp)
+        pied.cpp)

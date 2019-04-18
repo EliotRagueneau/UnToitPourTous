@@ -58,6 +58,8 @@ public:
 
 	void setSold(bool status);
 
+    int getId() const;
+
 };
 
 
