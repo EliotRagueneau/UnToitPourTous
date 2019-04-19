@@ -55,6 +55,7 @@ public:
     void load();
 
 private:  // Private Methods
+    // Utility methods based on good ptr list
     void reSell(const std::list<std::shared_ptr<Good>> &soldGoods);
 
     static void show(const std::list<std::shared_ptr<Good>> &goodsList);
@@ -66,6 +67,8 @@ private:  // Private Methods
     void addProposal(const std::shared_ptr<Good> &good);
 
     void sell(const std::shared_ptr<Good> &);
+
+    // Getters
 
     std::list<std::shared_ptr<Good>> getGoods() const;
 
@@ -80,7 +83,7 @@ private:  // Private Methods
 
     std::shared_ptr<Buyer> getBuyerByName();
 
-    // Filters
+    // Filters of good list
 
     void filterMenu(void (Agency::*pmemfn)(const std::list<std::shared_ptr<Good>> &),
                     const std::list<std::shared_ptr<Good>> &goods);
