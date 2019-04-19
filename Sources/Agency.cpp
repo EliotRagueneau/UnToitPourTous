@@ -460,6 +460,7 @@ void Agency::sell(const std::shared_ptr<Good> &good) {
             good->cleanProposals(); // The proposals are not valid anymore
             sellers[good->getSellerName()]->delGood(good); // Seller isn't anymore the owner of the good
             auto newSeller = buyer->toSeller(); // New owner is a future seller
+            newSeller->addGood(good); // Add the good to the properties of the new Seller
             good->setSeller(newSeller); // Indicates the new owner of the good
             sellers[newSeller->getName()] = newSeller; // Add the new owner to sellers
             goodSold = true;
