@@ -11,7 +11,6 @@
 #include <list>
 #include <memory>
 
-//#include "../Goods/Good.h"
 class Good;
 
 class Buyer : public Client {

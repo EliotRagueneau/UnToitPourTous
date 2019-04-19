@@ -1,11 +1,3 @@
-#include <utility>
-
-#include <utility>
-
-//
-// Created by eliot on 25/02/19.
-//
-
 #include <iostream>
 #include <Goods/Flat.h>
 
@@ -14,27 +6,24 @@
 
 using namespace std;
 
-Flat::Flat(double price, const std::string &address, double area, shared_ptr<Seller> sellerRef, bool sold, int nbRooms,
-           bool garage, int floor, bool cave, bool balcony, int nbBuildingFlats) : Residential(price, address, area,
-                                                                                               move(sellerRef), sold, nbRooms,
-                                                                                               garage), floor(floor),
-                                                                                   cave(cave), balcony(balcony),
-                                                                                   nbBuildingFlats(nbBuildingFlats) {}
+Flat::Flat(double price, const std::string &address, double area, const shared_ptr<Seller> &seller, bool sold,
+           int nbRooms, bool garage, int floor, bool cave, bool balcony, int nbBuildingFlats) :
+        Residential(price, address, area, seller, sold, nbRooms, garage), floor(floor), cave(cave), balcony(balcony),
+        nbBuildingFlats(nbBuildingFlats) {}
 
-Flat::Flat(shared_ptr<Seller> sellerRef) : Residential(move(sellerRef)) {
+Flat::Flat(const shared_ptr<Seller> &seller) : Residential(seller) {
     cout << "A quel étage se trouve l'appartement ?\n";
-    cin >> floor;
+    floor = Utils::getInt();
     cout << "L'apparatement possède t'il un balcon ?\n";
     balcony = Utils::yesOrNo();
     cout << "L'apparatement possède t'il une cave ?\n";
     cave = Utils::yesOrNo();
     cout << "Combien y a t'il d'appartements dans l'immeuble ?\n";
-    cin >> nbBuildingFlats;
-    cin.ignore();
+    nbBuildingFlats = Utils::getInt();
 }
 
 void Flat::show() const {
-    Good::printID();
+    Good::showID();
     cout << "\t-Type : Appartement\n";
     Residential::show();
     cout <<

@@ -1,14 +1,8 @@
-#include <utility>
-
-
-//
-// Created by eliot on 25/02/19.
-//
-
 #include <iostream>
 #include <limits>
 #include <Goods/Good.h>
 #include <fstream>
+#include <Utils.h>
 
 #include "../../Headers/Goods/Good.h"
 #include "../../Headers/Clients/Seller.h"
@@ -17,38 +11,37 @@ using namespace std;
 
 int Good::nbInstance = 0;
 
-Good::Good(const Good &src) : price(src.price),
-                              address(src.address), area(src.area),
-                              sellerRef(src.sellerRef) {
+Good::Good(double price, std::string address, double area, const shared_ptr<Seller> &sellerRef, bool sold)
+        : price(price), address(std::move(address)), area(area), seller(sellerRef), sold(sold) {
     id = ++nbInstance;
 }
 
-Good::Good(const shared_ptr<Seller> &sellerRef) : sellerRef(sellerRef) {
+Good::Good(const shared_ptr<Seller> &sellerRef) : seller(sellerRef) {
     cout << "Quelle est l'adresse du bien ?\n";
     getline(cin, address);
     cout << "Quelle est le prix du bien (€)?\n";
-    cin >> price;
+    price = Utils::getDouble();
     cout << "Quelle est la surface du bien (m²)?\n";
-    cin >> area;
-    cin.ignore();
+    area = Utils::getDouble();
     id = ++nbInstance;
 }
 
-Good::Good(double price, std::string address, double area, const shared_ptr<Seller> &sellerRef, bool sold)
-        : price(price), address(std::move(address)),
-          area(area), sellerRef(sellerRef), sold(sold) {
+Good::Good(const Good &src) : price(src.price),
+                              address(src.address), area(src.area),
+                              seller(src.seller) {
     id = ++nbInstance;
 }
 
-string Good::getSellerName() const {
-    shared_ptr<Seller> sharedData = sellerRef.lock();
-    if (sharedData) {
-        return sharedData->getName();
-    }
+Good::~Good() {
+    proposalsMap.clear();
 }
 
-string Good::getAddress() const {
-    return address;
+void Good::addProposal(const shared_ptr<Buyer> &ptrBuyer, double amount) {
+    proposalsMap[ptrBuyer] = amount;
+}
+
+void Good::showID() const {
+    cout << "Bien n°" << id << endl;
 }
 
 void Good::show() const {
@@ -57,6 +50,15 @@ void Good::show() const {
          "\t-Surface : " << area << "m²\n" <<
          "\t-Adresse : " << address << "\n" <<
          "\t-Nom du vendeur : " << getSellerName() << "\n";
+}
+
+void Good::showProposals() {
+    for (auto &it : proposalsMap) {
+        auto shared_data = it.first.lock();
+        if (shared_data) {
+            cout << shared_data->getName() << " Propose " << it.second << "€\n";
+        }
+    }
 }
 
 void Good::save(ofstream &file) const {
@@ -83,63 +85,53 @@ void Good::simpleSave(std::ofstream &file) const {
     file << getSellerName() << endl;
 }
 
-Good::~Good() {
-    proposalsMap.clear();
-}
-
-void Good::showProposals() {
-    for (auto &it : proposalsMap) {
-        auto shared_data = it.first.lock();
-        if (shared_data) {
-            cout << shared_data->getName() << " Propose " << it.second << "€\n";
-        }
-    }
-}
-
 double Good::getPrice() const {
     return price;
+}
+
+string Good::getAddress() const {
+    return address;
 }
 
 double Good::getArea() const {
     return area;
 }
 
-void Good::addProposal(const shared_ptr<Buyer> &ptrBuyer, double amount) {
-    proposalsMap[ptrBuyer] = amount;
-}
-
-void Good::printID() const {
-    cout << "Bien n°" << id << endl;
-}
-
-bool Good::isSold() const {
-    return sold;
-}
-
-
-void Good::setSold(bool status) {
-    sold = status;
-    price = 0;
+string Good::getSellerName() const {
+    shared_ptr<Seller> sharedData = seller.lock();
+    if (sharedData) {
+        return sharedData->getName();
+    }
+    return "Vendeur supprimé";
 }
 
 int Good::getId() const {
     return id;
 }
 
-void Good::cleanProposals() {
-	proposalsMap.clear();
-}
-
-void Good::setSellerRef(const std::shared_ptr<Seller>& seller) {
-	sellerRef = seller;
-}
-
-void Good::setPrice(const double &prix){
-	price = prix;
+bool Good::isSold() const {
+    return sold;
 }
 
 const map<weak_ptr<Buyer>, double, owner_less<weak_ptr<Buyer>>> &Good::getProposalsMap() const {
     return proposalsMap;
+}
+
+void Good::setPrice(const double &prix) {
+    price = prix;
+}
+
+void Good::setSeller(const shared_ptr<Seller> &newSeller) {
+    this->seller = newSeller;
+}
+
+void Good::setSold(bool status) {
+    sold = status;
+    price = 0;
+}
+
+void Good::cleanProposals() {
+    proposalsMap.clear();
 }
 
 

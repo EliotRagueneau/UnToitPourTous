@@ -7,7 +7,6 @@
 
 
 #include "Good.h"
-#include <fstream>
 
 
 class Professional : public Good{
@@ -16,10 +15,10 @@ private:
     bool storeRoom;
 
 public:
-    Professional(double price, const std::string &address, double area, std::shared_ptr<Seller> sellerRef, bool sold,
+    Professional(double price, const std::string &address, double area, const std::shared_ptr<Seller>& seller, bool sold,
                  double showcaseSize, bool storeRoom);
 
-    explicit Professional(std::shared_ptr<Seller> sellerRef);
+    explicit Professional(const std::shared_ptr<Seller>& sellerRef);
 
     virtual void show() const;
 

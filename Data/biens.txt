@@ -1,10 +1,23 @@
 Terrain
-0
+20000
 50
 15 rue Beaufleury
 Eliot Ragueneau
-1
+0
 <Propositions>
 </Propositions>
+0
+
+Maison
+800000
+50
+2 Place de la Bourse, Bordeaux
+Grégoire Lemarchal
+0
+<Propositions>
+</Propositions>
+3
+1
+0
 0
 

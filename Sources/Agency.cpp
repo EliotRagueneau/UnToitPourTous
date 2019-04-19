@@ -1,7 +1,3 @@
-//
-// Created by eliot on 25/02/19.
-//
-
 #include <iostream>
 #include <memory>
 #include <limits>
@@ -35,25 +31,23 @@ Agency::~Agency() {
 
 shared_ptr<Good> Agency::addGood() {
     cout << "Vous allez rajouter un nouveau bien.\n";
-    std::shared_ptr<Seller> sellerRef = getSellerRef();
-    string sellerName = sellerRef->getName();
+    std::shared_ptr<Seller> seller = getSeller();
+    string sellerName = seller->getName();
 
     shared_ptr<Good> toAdd;
 
-    int goodKind = Utils::selectType();
-
-    switch (goodKind) {
+    switch (Utils::selectType()) {
         case 1:
-            toAdd = shared_ptr<Good>(new House(sellerRef));
+            toAdd = shared_ptr<Good>(new House(seller));
             break;
         case 2:
-            toAdd = shared_ptr<Good>(new Flat(sellerRef));
+            toAdd = shared_ptr<Good>(new Flat(seller));
             break;
         case 3:
-            toAdd = shared_ptr<Good>(new Ground(sellerRef));
+            toAdd = shared_ptr<Good>(new Ground(seller));
             break;
         case 4:
-            toAdd = shared_ptr<Good>(new Professional(sellerRef));
+            toAdd = shared_ptr<Good>(new Professional(seller));
             break;
 
         default:
@@ -68,7 +62,7 @@ shared_ptr<Good> Agency::addGood() {
     return toAdd;
 }
 
-shared_ptr<Seller> Agency::getSellerRef() {
+shared_ptr<Seller> Agency::getSeller() {
     cout << "Quel est le nom du vendeur ?\n";
 
     string sellerName;
@@ -84,21 +78,20 @@ shared_ptr<Seller> Agency::getSellerRef() {
 }
 
 shared_ptr<Buyer> Agency::addBuyer() {
-    shared_ptr<Buyer> ptrNewBuyer;
-    ptrNewBuyer = make_shared<Buyer>();
-    buyers[ptrNewBuyer->getName()] = ptrNewBuyer;
-    return ptrNewBuyer;
+    shared_ptr<Buyer> newBuyer;
+    newBuyer = make_shared<Buyer>();
+    buyers[newBuyer->getName()] = newBuyer;
+    return newBuyer;
 }
 
 void Agency::reSell() {
     cout << "Comment voulez-vous choisir le bien à remettre en vente ?" << endl;
     cout << "\t-1. Par l'adresse du bien" << endl;
     cout << "\t-2. Par navigation et filtration parmi les biens vendus" << endl;
-
     shared_ptr<Good> good;
     switch (Utils::getInt()) {
         case 1:
-            good = Agency::getGoodByAddress();
+            good = getGoodByAddress();
             good->setSold(false);
             cout << "Quelle est le prix de mise en vente?\n";
             good->setPrice(Utils::getDouble());
@@ -117,28 +110,27 @@ void Agency::search() {
 }
 
 void Agency::visit() {
-    shared_ptr<Good> goodRef = getGoodByAddress();
-    visit(goodRef);
+    shared_ptr<Good> good = getGoodByAddress();
+    visit(good);
 }
 
 void Agency::addProposal() {
-    shared_ptr<Good> ptrBien;
-    while (ptrBien == nullptr) {
+    shared_ptr<Good> good;
+    while (good == nullptr) {
         cout << "Détermination du bien à laquelle l'on veut faire une proposition:\n";
-        ptrBien = getGoodByAddress();
-        if (ptrBien == nullptr) {
+        good = getGoodByAddress();
+        if (good == nullptr) {
             cout << "Voulez vous abandonner la proposition d'achat ?" << endl;
             if (Utils::yesOrNo()) {
                 return;
             }
         }
     }
-
-    addProposal(ptrBien);
+    addProposal(good);
 }
 
 void Agency::sell() {
-    sell(Agency::getGoodByAddress());
+    sell(getGoodByAddress());
 }
 
 
@@ -199,7 +191,6 @@ void Agency::save() {
         }
         buyersFile.close();
     }
-
 }
 
 
@@ -208,16 +199,19 @@ void Agency::load() {
     buyers.clear();
     sellers.clear();
 
+    // Sellers loading
     string buffer, name, address;
     ifstream sellerFile("../Data/vendeurs.txt");
     if (sellerFile.is_open()) {
         while (getline(sellerFile, name)) {
             getline(sellerFile, address);
             sellers[name] = make_shared<Seller>(name, address);
+            getline(sellerFile, buffer); // Empty line between Sellers
         }
         sellerFile.close();
     }
 
+    // Buyers name + address Loading
     ifstream buyerFile("../Data/acheteurs.txt");
     if (buyerFile.is_open()) {
         while (getline(buyerFile, name)) {
@@ -231,7 +225,7 @@ void Agency::load() {
         buyerFile.close();
     }
 
-
+    // Goods loading
     string goodType, goodAddress, goodSellerName;
 
     double goodPrice, goodArea, proposalAmount, proShowcaseSize;
@@ -240,7 +234,7 @@ void Agency::load() {
 
     int resiNbRooms, flatFloor, flatNbBuildingFlats;
 
-    list<pair<shared_ptr<Buyer>, double>> proposals;
+    list<pair<shared_ptr<Buyer>, double>> proposals; // List of propositions received for a specific good
 
     ifstream goodsFile("../Data/biens.txt");
     if (goodsFile.is_open()) {
@@ -253,8 +247,8 @@ void Agency::load() {
             getline(goodsFile, goodSellerName);
             goodsFile >> goodSold;
             goodsFile.ignore();
-            getline(goodsFile, buffer);
-            getline(goodsFile, buffer);
+            getline(goodsFile, buffer); // <Propositions>
+            getline(goodsFile, buffer); // name OR </Propositions>
             while (buffer != "</Propositions>") {
                 name = buffer;
                 goodsFile >> proposalAmount;
@@ -300,21 +294,23 @@ void Agency::load() {
             for (const auto &proposal: proposals) {
                 toAdd->addProposal(proposal.first, proposal.second);
             }
+            proposals.clear();
 
             goods.push_back(toAdd);
             sellers[goodSellerName]->addGood(toAdd);
-            getline(goodsFile, buffer);
-            getline(goodsFile, buffer);
+            goodsFile.ignore();
+            getline(goodsFile, buffer); // Empty line between Goods
         }
         goodsFile.close();
     }
+    // Buyers visited Goods loading
 
     buyerFile.open("../Data/acheteurs.txt");
     if (buyerFile.is_open()) {
         while (getline(buyerFile, name)) {
             getline(buyerFile, address);
             getline(buyerFile, buffer); // <VisitedGoods>
-            getline(buyerFile, buffer); // goodAddress
+            getline(buyerFile, buffer); // goodAddress or </VisitedGoods>
             while (buffer != "</VisitedGoods>") {
                 goodAddress = buffer;
                 buyerFile >> goodPrice;
@@ -324,7 +320,7 @@ void Agency::load() {
                 buyers[name]->visit(getGood(goodPrice, goodArea, goodAddress, goodSellerName));
                 getline(buyerFile, buffer);
             }
-            getline(buyerFile, buffer);
+            getline(buyerFile, buffer); // Empty line between buyers
         }
         buyerFile.close();
     }
@@ -344,39 +340,7 @@ void Agency::reSell(const list<shared_ptr<Good>> &soldGoods) {
     shared_ptr<Good> good;
     switch (Utils::getInt()) {
         case 1:
-            cout << "Vous voulez filtrer par :" << endl;
-            cout << "\t-1. Prix" << endl;
-            cout << "\t-2. Surface" << endl;
-            cout << "\t-3. Type" << endl;
-            switch (Utils::getInt()) {
-                case 1: // Prix
-                    cout << "Vous voulez fixer le prix :" << endl;
-                    if (Utils::minOrMax()) {
-                        cout << "Quelle est le prix maximum ?" << endl;
-                        search(filterLowerPrice(Utils::getDouble(), soldGoods));
-                    } else {
-                        cout << "Quelle est le prix minimum ?" << endl;
-                        search(filterGreaterPrice(Utils::getDouble(), soldGoods));
-                    }
-                    break;
-                case 2: // Surface
-                    cout << "Vous voulez fixer la surface :" << endl;
-                    if (Utils::minOrMax()) {
-                        cout << "Quelle est la surface maximum ?" << endl;
-                        search(filterLowerArea(Utils::getDouble(), soldGoods));
-                    } else {
-                        cout << "Quelle est la surface minimum ?" << endl;
-                        search(filterGreaterArea(Utils::getDouble(), soldGoods));
-                    }
-                    break;
-                case 3: // Type
-                    search(filterType(soldGoods));
-                    break;
-                default:
-                    cout << "Vous n'avez pas sélectionner de filtre valide." << endl;
-                    search(soldGoods);
-                    break;
-            }
+            filterMenu(&Agency::reSell, soldGoods);
             break;
         case 2:
             good = getGoodByID(soldGoods);
@@ -418,39 +382,7 @@ void Agency::search(const list<shared_ptr<Good>> &goodsList) {
     shared_ptr<Good> good;
     switch (Utils::getInt()) {
         case 1:
-            cout << "Vous voulez filtrer par :" << endl;
-            cout << "\t-1. Prix" << endl;
-            cout << "\t-2. Surface" << endl;
-            cout << "\t-3. Type" << endl;
-            switch (Utils::getInt()) {
-                case 1: // Prix
-                    cout << "Vous voulez fixer le prix :" << endl;
-                    if (Utils::minOrMax()) {
-                        cout << "Quelle est le prix maximum ?" << endl;
-                        search(filterLowerPrice(Utils::getDouble(), goodsList));
-                    } else {
-                        cout << "Quelle est le prix minimum ?" << endl;
-                        search(filterGreaterPrice(Utils::getDouble(), goodsList));
-                    }
-                    break;
-                case 2: // Surface
-                    cout << "Vous voulez fixer la surface :" << endl;
-                    if (Utils::minOrMax()) {
-                        cout << "Quelle est la surface maximum ?" << endl;
-                        search(filterLowerArea(Utils::getDouble(), goodsList));
-                    } else {
-                        cout << "Quelle est la surface minimum ?" << endl;
-                        search(filterGreaterArea(Utils::getDouble(), goodsList));
-                    }
-                    break;
-                case 3: // Type
-                    search(filterType(goodsList));
-                    break;
-                default:
-                    cout << "Vous n'avez pas sélectionner de filtre valide." << endl;
-                    search(goodsList);
-                    break;
-            }
+            filterMenu(&Agency::search, goodsList);
             break;
         case 2: // Visite
             good = getGoodByID(goodsList);
@@ -477,17 +409,17 @@ void Agency::search(const list<shared_ptr<Good>> &goodsList) {
     }
 }
 
-void Agency::visit(const shared_ptr<Good> &goodRef) {
-    shared_ptr<Buyer> buyerRef = getBuyerByName();
-    buyerRef->visit(goodRef);
+void Agency::visit(const shared_ptr<Good> &good) {
+    shared_ptr<Buyer> buyer = getBuyerByName();
+    buyer->visit(good);
 }
 
-void Agency::addProposal(const shared_ptr<Good> &goodRef) {
-    shared_ptr<Buyer> ptrAcheteur;
-    while (ptrAcheteur == nullptr) {
+void Agency::addProposal(const shared_ptr<Good> &good) {
+    shared_ptr<Buyer> buyer;
+    while (buyer == nullptr) {
         cout << "Détermination de l'acheteur qui propose une offre :\n";
-        ptrAcheteur = Agency::getBuyerByName();
-        if (ptrAcheteur == nullptr) {
+        buyer = Agency::getBuyerByName();
+        if (buyer == nullptr) {
             cout << "Voulez vous abandonner la proposition d'achat ?" << endl;
             if (Utils::yesOrNo()) {
                 return;
@@ -495,47 +427,42 @@ void Agency::addProposal(const shared_ptr<Good> &goodRef) {
         }
     }
 
-    cout << "Quel est le prix proposé par " << ptrAcheteur->getName() << "?" << endl;
-    double prix;
-    cin >> prix;
-    cin.ignore();
-    goodRef->addProposal(ptrAcheteur, prix);
+    cout << "Quel est le prix proposé par " << buyer->getName() << "?" << endl;
+    good->addProposal(buyer, Utils::getDouble());
 
     cout << "Proposition enregistée\n";
-    goodRef->showProposals();
-
+    cout << "Les propositions pour ce bien sont :\n";
+    good->showProposals();
 }
 
 void Agency::sell(const std::shared_ptr<Good> &good) {
     good->show();
-    bool goodSelled = false;
-    while (!goodSelled) {
+    bool goodSold = false;
+    while (!goodSold) {
         cout << "Les propositions pour ce bien sont :" << endl;
         auto proposals = good->getProposalsMap();
         int counter = 1;
 
         vector<shared_ptr<Buyer>> proposers;
         for (const auto &pair: proposals) {
-            auto sharedData = pair.first.lock();
-            if (sharedData) {
-                cout << "\t-" << counter << " : " << sharedData->getName() << " : " << pair.second << " €" << endl;
-                proposers.push_back(sharedData);
+            auto proposer = pair.first.lock();
+            if (proposer) {
+                cout << "\t-" << counter << " : " << proposer->getName() << " : " << pair.second << " €" << endl;
+                proposers.push_back(proposer);
                 counter++;
             }
         }
         cout << "Laquelle voulez vous accepter ?" << endl;
-        int choice;
-        cin >> choice;
-
+        int choice = Utils::getInt();
         if (choice != 0 && choice <= counter) {
-            auto buyerRef = proposers[choice - 1];
-            good->setSold(true);
-            good->cleanProposals();
-            sellers[good->getSellerName()]->delGood(good);
-            auto newSeller = buyerRef->toSeller();
-            good->setSellerRef(newSeller);
-            sellers[newSeller->getName()] = newSeller;
-            goodSelled = true;
+            auto buyer = proposers[choice - 1]; // Select the new owner
+            good->setSold(true); // The good is sold
+            good->cleanProposals(); // The proposals are not valid anymore
+            sellers[good->getSellerName()]->delGood(good); // Seller isn't anymore the owner of the good
+            auto newSeller = buyer->toSeller(); // New owner is a future seller
+            good->setSeller(newSeller); // Indicates the new owner of the good
+            sellers[newSeller->getName()] = newSeller; // Add the new owner to sellers
+            goodSold = true;
         } else {
             cout << "La proposition n°" << choice << " n'éxiste pas." << endl;
             cout << "Voulez vous stopper la transaction ?" << endl;
@@ -552,9 +479,7 @@ std::list<std::shared_ptr<Good>> Agency::getGoods() const {
 
 std::shared_ptr<Good> Agency::getGoodByID(const std::list<std::shared_ptr<Good>> &goodsList) {
     cout << "Quel est le numéro du bien que vous voulez sélectionner ?" << endl;
-    int id;
-    cin >> id;
-    cin.ignore();
+    int id = Utils::getInt();
     for (auto good : goodsList) {
         if (good->getId() == id) {
             return good;
@@ -599,30 +524,66 @@ shared_ptr<Seller> Agency::getSellerByName(const std::string &sellerName) {
 }
 
 shared_ptr<Buyer> Agency::getBuyerByName() {
-// Vérification si l'acheteur existe, récupération de l adresse de l'objet ou proposition de création de l'objet buyer
     cout << "Quel est le nom de l'acheteur?\n";
-    string nomAcheteur;
-    getline(cin, nomAcheteur); // vérifier que ca autorise les espaces si on décide d entré nom prénom
-    auto trouve = buyers.find(nomAcheteur);
+    string buyerName;
+    getline(cin, buyerName);
+    auto foundBuyer = buyers.find(buyerName);
 
-    if (trouve == buyers.end()) {
+    if (foundBuyer == buyers.end()) {
         cout << "L'acheteur n'est pas enregistré dans l'agence\n";
         cout << "Voulez-vous ajouter cette acheteur?\n";
         if (Utils::yesOrNo()) {
-            cout << "Quelle est l'adresse de " << nomAcheteur << " ?" << endl;
+            cout << "Quelle est l'adresse de " << buyerName << " ?" << endl;
             string address;
             getline(cin, address);
-            buyers[nomAcheteur] = make_shared<Buyer>(nomAcheteur, address);
-            return buyers[nomAcheteur];
+            buyers[buyerName] = make_shared<Buyer>(buyerName, address);
+            return buyers[buyerName];
         } else {
             return nullptr;
         }
     } else {
-        return trouve->second;
+        return foundBuyer->second;
     }
 }
 
 // Filters
+
+void
+Agency::filterMenu(void (Agency::*pmemfn)(const list<shared_ptr<Good>> &), const list<shared_ptr<Good>> &goodsList) {
+    cout << "Vous voulez filtrer par :" << endl;
+    cout << "\t-1. Prix" << endl;
+    cout << "\t-2. Surface" << endl;
+    cout << "\t-3. Type" << endl;
+    switch (Utils::getInt()) {
+        case 1: // Prix
+            cout << "Vous voulez fixer le prix :" << endl;
+            if (Utils::minOrMax()) {
+                cout << "Quelle est le prix maximum ?" << endl;
+                (this->*pmemfn)(filterLowerPrice(Utils::getDouble(), goodsList));
+            } else {
+                cout << "Quelle est le prix minimum ?" << endl;
+                (this->*pmemfn)(filterGreaterPrice(Utils::getDouble(), goodsList));
+            }
+            break;
+        case 2: // Surface
+            cout << "Vous voulez fixer la surface :" << endl;
+            if (Utils::minOrMax()) {
+                cout << "Quelle est la surface maximum ?" << endl;
+                (this->*pmemfn)(filterLowerArea(Utils::getDouble(), goodsList));
+            } else {
+                cout << "Quelle est la surface minimum ?" << endl;
+                (this->*pmemfn)(filterGreaterArea(Utils::getDouble(), goodsList));
+            }
+            break;
+        case 3: // Type
+            (this->*pmemfn)(filterType(goodsList));
+            break;
+        default:
+            cout << "Vous n'avez pas sélectionner de filtre valide." << endl;
+            (this->*pmemfn)(goodsList);
+            break;
+    }
+}
 
 std::list<std::shared_ptr<Good>> Agency::filterToSell(std::list<std::shared_ptr<Good>> goodsList) {
     std::list<std::shared_ptr<Good>> filteredGoodsList;
@@ -707,4 +668,3 @@ std::list<std::shared_ptr<Good>> Agency::filterType(std::list<std::shared_ptr<Go
     }
     return filteredGoodsList;
 }
-

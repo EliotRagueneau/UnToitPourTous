@@ -1,7 +1,3 @@
-//
-// Created by eliot on 25/02/19.
-//
-
 #include <iostream>
 #include <Goods/House.h>
 
@@ -10,14 +6,14 @@
 
 using namespace std;
 
-House::House(double price, const std::string &address, double area, shared_ptr<Seller> sellerRef, bool sold,
+House::House(double price, const std::string &address, double area, const shared_ptr<Seller>& seller, bool sold,
              int nbRooms,
              bool garage,
              bool garden, bool swimmingPool)
-        : Residential(price, address, area, sellerRef, sold, nbRooms, garage), garden(garden),
+        : Residential(price, address, area, seller, sold, nbRooms, garage), garden(garden),
                                   swimmingPool(swimmingPool) {}
 
-House::House(shared_ptr<Seller> sellerRef) : Residential(sellerRef) {
+House::House(const shared_ptr<Seller>& seller) : Residential(seller) {
     cout << "La maison possède t'elle un jardin ?\n";
     garden = Utils::yesOrNo();
     cout << "La maison possède t'elle une piscine ?\n";
@@ -25,10 +21,8 @@ House::House(shared_ptr<Seller> sellerRef) : Residential(sellerRef) {
 }
 
 void House::show() const {
-    Good::printID();
-
+    Good::showID();
     cout << "\t-Type : Maison\n";
-
     Residential::show();
     if (garden) {
         cout << "\t-La maison possède un jardin\n";

@@ -30,7 +30,7 @@ public:
 
     std::shared_ptr<Good> addGood();
 
-    std::shared_ptr<Seller> getSellerRef();
+    std::shared_ptr<Seller> getSeller();
 
     std::shared_ptr<Buyer> addBuyer();
 
@@ -55,15 +55,15 @@ public:
     void load();
 
 private:  // Private Methods
-    void reSell(const std::list<std::shared_ptr<Good>>& soldGoods);
+    void reSell(const std::list<std::shared_ptr<Good>> &soldGoods);
 
     static void show(const std::list<std::shared_ptr<Good>> &goodsList);
 
     void search(const std::list<std::shared_ptr<Good>> &goodsList);
 
-    void visit(const std::shared_ptr<Good>& goodRef);
+    void visit(const std::shared_ptr<Good> &good);
 
-    void addProposal(const std::shared_ptr<Good>& goodRef);
+    void addProposal(const std::shared_ptr<Good> &good);
 
     void sell(const std::shared_ptr<Good> &);
 
@@ -81,6 +81,9 @@ private:  // Private Methods
     std::shared_ptr<Buyer> getBuyerByName();
 
     // Filters
+
+    void filterMenu(void (Agency::*pmemfn)(const std::list<std::shared_ptr<Good>> &),
+                    const std::list<std::shared_ptr<Good>> &goods);
 
     static std::list<std::shared_ptr<Good>>
     filterSold(std::list<std::shared_ptr<Good>> goodsList);

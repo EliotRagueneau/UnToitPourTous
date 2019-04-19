@@ -7,7 +7,6 @@
 
 
 #include "Good.h"
-#include <fstream>
 
 
 class Residential : public Good {
@@ -16,10 +15,10 @@ protected:
     bool garage;
 public:
 
-    Residential(double price, const std::string &address, double area, std::shared_ptr<Seller> sellerRef, bool sold,
+    Residential(double price, const std::string &address, double area, const std::shared_ptr<Seller>& seller, bool sold,
                 int nbRooms, bool garage);
 
-    explicit Residential(std::shared_ptr<Seller> sellerRef);
+    explicit Residential(const std::shared_ptr<Seller>& seller);
 
     virtual void show() const;
 

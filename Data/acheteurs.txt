@@ -1,3 +1,12 @@
+Antoine Laporte
+17 rue des Grands Hommes, Bordeaux
+<VisitedGoods>
+2 Place de la Bourse, Bordeaux
+800000
+50
+Grégoire Lemarchal
+</VisitedGoods>
+
 Eliot Ragueneau
 15 rue Beaufleury
 <VisitedGoods>

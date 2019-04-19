@@ -1,7 +1,3 @@
-//
-// Created by eliot on 25/02/19.
-//
-
 #include <iostream>
 #include <Goods/Residential.h>
 
@@ -11,13 +7,13 @@
 using namespace std;
 
 
-Residential::Residential(double price, const string &address, double area, shared_ptr<Seller> sellerRef, bool sold,
-                         int nbRooms, bool garage)
-        : Good(price, address, area, sellerRef, sold), nbRooms(nbRooms), garage(garage) {}
+Residential::Residential(double price, const string &address, double area, const shared_ptr<Seller> &seller, bool sold,
+                         int nbRooms, bool garage) :
+        Good(price, address, area, seller, sold), nbRooms(nbRooms), garage(garage) {}
 
-Residential::Residential(shared_ptr<Seller> sellerRef) : Good(sellerRef) {
+Residential::Residential(const shared_ptr<Seller> &seller) : Good(seller) {
     cout << "Combien y a t'il de pièces dans la résidence ?\n";
-    cin >> nbRooms;
+    nbRooms = Utils::getInt();
     cout << "Il y a t'il un garage dans la résidence ?\n";
     garage = Utils::yesOrNo();
 }

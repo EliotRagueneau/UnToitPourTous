@@ -1,9 +1,6 @@
-//
-// Created by eliot on 25/02/19.
-//
-
 #include "../Headers/Utils.h"
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
@@ -53,6 +50,12 @@ double Utils::getDouble() {
     double value;
     cin >> value;
     cin.ignore();
+    if (cin.fail()) {
+        cout << "Ceci n'est pas un nombre décimal ..." << endl;
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return getDouble();
+    }
     return value;
 }
 
@@ -60,5 +63,11 @@ int Utils::getInt() {
     int value;
     cin >> value;
     cin.ignore();
+    if (cin.fail()) {
+        cout << "Ceci n'est pas un entier ..." << endl;
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return getInt();
+    }
     return value;
 }

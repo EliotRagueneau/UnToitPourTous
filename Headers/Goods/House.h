@@ -7,19 +7,20 @@
 
 
 #include "Residential.h"
+
 class House : public Residential {
 private:
     bool garden;
     bool swimmingPool;
 public:
-    explicit House(std::shared_ptr<Seller> sellerRef);
+    House(double price, const std::string &address, double area, const std::shared_ptr<Seller> &seller, bool sold,
+          int nbRooms, bool garage, bool garden, bool swimmingPool);
 
-    House(double price, const std::string &address, double area, std::shared_ptr<Seller> sellerRef, bool sold,
-          int nbRooms, bool garage,
-          bool garden, bool swimmingPool);
+    explicit House(const std::shared_ptr<Seller> &seller);
 
     virtual void show() const;
-    virtual void save(std::ofstream & file) const;
+
+    virtual void save(std::ofstream &file) const;
 
     virtual std::string getType() const;
 };
